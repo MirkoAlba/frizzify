@@ -1,4 +1,4 @@
-@import "./variables.scss"; //override bootstrap variables
 @import "../node_modules/bootstrap/scss/bootstrap"; //imported all bootstrap scss
-
+@import "./variables.scss"; //override bootstrap variables
+@import "./functions";
 @import "typography";
