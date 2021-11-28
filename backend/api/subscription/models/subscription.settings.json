@@ -1,0 +1,30 @@
+{
+  "kind": "collectionType",
+  "collectionName": "subscriptions",
+  "info": {
+    "name": "Subscription",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "cost": {
+      "type": "float"
+    },
+    "description": {
+      "type": "string"
+    },
+    "user": {
+      "via": "subscription",
+      "plugin": "users-permissions",
+      "model": "user"
+    }
+  }
+}

@@ -4,7 +4,7 @@
 // // consistent naming. Ex: $nav-link-disabled-color and $modal-content-box-shadow-xs.
 
 // // Color system
-
+@use "sass:math";
 // // scss-docs-start gray-color-variables
 // $white:    #fff !default;
 // $gray-100: #f8f9fa !default;
@@ -67,8 +67,8 @@
 // // scss-docs-end colors-map
 
 // // scss-docs-start theme-color-variables
-// $primary:       $blue !default;
-// $secondary:     $gray-600 !default;
+$primary: #004be0;
+$secondary: #26cf86;
 // $success:       $green !default;
 // $info:          $cyan !default;
 // $warning:       $yellow !default;
@@ -368,16 +368,25 @@
 // // variables. Mostly focused on spacing.
 // // You can add more entries to the $spacers map, should you need more variation.
 
+$grid-gutter-width: 30px;
+
 // // scss-docs-start spacer-variables-maps
-// $spacer: 1rem !default;
-// $spacers: (
-//   0: 0,
-//   1: $spacer * .25,
-//   2: $spacer * .5,
-//   3: $spacer,
-//   4: $spacer * 1.5,
-//   5: $spacer * 3,
-// ) !default;
+$spacer: 1rem !default;
+$spacers: (
+  0: 0,
+  1: $spacer * 0.25,
+  2: $spacer * 0.5,
+  3: $spacer,
+  4: $spacer * 1.5,
+  5: $spacer * 3,
+  30: $grid-gutter-width,
+  45: math.div($grid-gutter-width, 2) + $grid-gutter-width,
+  60: $grid-gutter-width * 2,
+  75: (
+    $grid-gutter-width * 2,
+  ) + math.div($grid-gutter-width, 2),
+  90: $grid-gutter-width * 3,
+);
 // // scss-docs-end spacer-variables-maps
 
 // // Position
@@ -459,7 +468,6 @@
 // // Set the number of columns and specify the width of the gutters.
 
 // $grid-columns:                12 !default;
-// $grid-gutter-width:           1.5rem !default;
 // $grid-row-columns:            6 !default;
 
 // // Container padding
@@ -509,8 +517,8 @@
 // $transition-base:             all .2s ease-in-out !default;
 // $transition-fade:             opacity .15s linear !default;
 // // scss-docs-start collapse-transition
-// $transition-collapse:         height .35s ease !default;
-// $transition-collapse-width:   width .35s ease !default;
+$transition-collapse: none;
+$transition-collapse-width: none;
 // // scss-docs-end collapse-transition
 
 // // stylelint-disable function-disallowed-list

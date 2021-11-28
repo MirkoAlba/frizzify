@@ -1,0 +1,43 @@
+{
+  "kind": "collectionType",
+  "collectionName": "playlists",
+  "info": {
+    "name": "Playlist",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "picture": {
+      "collection": "file",
+      "via": "related",
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos"
+      ],
+      "plugin": "upload",
+      "required": false,
+      "pluginOptions": {}
+    },
+    "createdAt": {
+      "type": "datetime"
+    },
+    "public": {
+      "type": "boolean"
+    },
+    "songs": {
+      "collection": "song"
+    }
+  }
+}

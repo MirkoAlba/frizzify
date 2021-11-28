@@ -1,10 +1,33 @@
+import { useState, useRef } from "react";
+
+import { useMutation } from "@apollo/client";
+import { LOGIN } from "../graphql/mutations/index";
+
 export default function Home() {
+  const email = useRef();
+  const pwd = useRef();
+
+  const handleChange = (current) => {
+    console.log(current.target.value);
+  };
+
+  const [login] = useMutation(LOGIN, {
+    onCompleted: (d) => console.log("data: ", d),
+    variables: {
+      input: {
+        identifier: email.current?.value,
+        password: pwd.current?.value,
+      },
+    },
+  });
+
   return (
     <div>
-      <h1>ciao</h1>
-      <h2>ciao</h2>
-      <h3>ciao</h3>
-      <h4>ciao</h4>
+      email
+      <input onChange={(e) => handleChange(e)} ref={email} type="text" />
+      pwd
+      <input onChange={(e) => handleChange(e)} ref={pwd} type="password" />
+      <button onClick={() => login()}>login</button>
     </div>
   );
 }

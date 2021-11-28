@@ -2,3 +2,8 @@
 @import "./variables.scss"; //override bootstrap variables
 @import "./functions";
 @import "typography";
+
+@import "./global";
+
+@import "./layout/header";
+@import "./layout/footer";

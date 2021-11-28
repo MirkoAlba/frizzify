@@ -1,0 +1,6 @@
+main {
+  margin-top: rem(88px);
+  @include media-breakpoint-down(lg) {
+    margin-top: rem(76px);
+  }
+}

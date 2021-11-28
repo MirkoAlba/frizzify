@@ -1,0 +1,31 @@
+{
+  "kind": "collectionType",
+  "collectionName": "albums",
+  "info": {
+    "name": "Album",
+    "description": ""
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true,
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "releaseDate": {
+      "type": "datetime"
+    },
+    "genre": {
+      "type": "string"
+    },
+    "songs": {
+      "collection": "song"
+    }
+  }
+}
