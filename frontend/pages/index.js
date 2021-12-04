@@ -4,11 +4,8 @@ import { useMutation, useLazyQuery } from "@apollo/client";
 import { LOGIN } from "../graphql/mutations/index";
 import { SONGS } from "../graphql/queries/index";
 import { setAccessToken } from "../apollo/access-token";
-import { useCookies } from "react-cookie";
 
 export default function Home() {
-  const [cookie, setCookie] = useCookies(["user"]);
-
   const inputInitialState = {
     identifier: "",
     password: "",
@@ -17,8 +14,17 @@ export default function Home() {
 
   const [login] = useMutation(LOGIN, {
     onCompleted: (d) => {
-      console.log("data: ", d);
       setAccessToken(d.login.jwt);
+      fetch("/api/auth", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(d.login?.jwt),
+      });
+    },
+    onError: (e) => {
+      console.log(e.graphQLErrors[0].extensions.error.details.errors);
     },
     variables: {
       input,
