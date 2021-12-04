@@ -11,6 +11,8 @@ import isEqual from "lodash/isEqual";
 import { setContext } from "@apollo/client/link/context";
 import { onError } from "@apollo/client/link/error";
 
+import { getAccessToken } from "./access-token";
+
 import { uri } from "./api";
 
 const dynamicUri = `${uri}/graphql`;
@@ -20,6 +22,7 @@ export const APOLLO_STATE_PROP_NAME = "__APOLLO_STATE__";
 let apolloClient;
 
 function createApolloClient() {
+  //link per vedere loggati meglio gli errori
   const errorLink = onError(({ graphQLErrors, networkError }) => {
     if (graphQLErrors)
       graphQLErrors.forEach(({ message, locations, path }) =>
@@ -31,17 +34,30 @@ function createApolloClient() {
     if (networkError) console.log(`[Network error]: ${networkError}`);
   });
 
+  //link autenticazione
+  const authLink = setContext((_, { headers }) => {
+    // prendo il token
+    const token = getAccessToken();
+
+    return {
+      headers: {
+        ...headers,
+        authorization: token ? `Bearer ${token}` : "", //lo passo negli headers della req
+      },
+    };
+  });
+
   const httpLink = new HttpLink({
     uri: dynamicUri,
-    // credentials: "include",
+    credentials: "same-origin", //se il server è nello stesso dominio "same-origin" altrimenti "include", quindi in locale "same-origin"
     headers: {
-      Accept: "application/json",
+      "Content-Type": "application/json",
     },
   });
 
   return new ApolloClient({
     ssrMode: typeof window === "undefined",
-    link: ApolloLink.from([errorLink, httpLink]),
+    link: ApolloLink.from([errorLink, authLink.concat(httpLink)]),
     cache: new InMemoryCache(),
   });
 }

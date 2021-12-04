@@ -1,33 +1,52 @@
-import { useState, useRef } from "react";
+import { useRef, useState } from "react";
 
-import { useMutation } from "@apollo/client";
+import { useMutation, useLazyQuery } from "@apollo/client";
 import { LOGIN } from "../graphql/mutations/index";
+import { SONGS } from "../graphql/queries/index";
+import { setAccessToken } from "../apollo/access-token";
+import { useCookies } from "react-cookie";
 
 export default function Home() {
-  const email = useRef();
-  const pwd = useRef();
+  const [cookie, setCookie] = useCookies(["user"]);
 
-  const handleChange = (current) => {
-    console.log(current.target.value);
+  const inputInitialState = {
+    identifier: "",
+    password: "",
   };
+  const [input, setInput] = useState(inputInitialState);
 
   const [login] = useMutation(LOGIN, {
-    onCompleted: (d) => console.log("data: ", d),
-    variables: {
-      input: {
-        identifier: email.current?.value,
-        password: pwd.current?.value,
-      },
+    onCompleted: (d) => {
+      console.log("data: ", d);
+      setAccessToken(d.login.jwt);
     },
+    variables: {
+      input,
+    },
+  });
+
+  const [q] = useLazyQuery(SONGS, {
+    onCompleted: (d) => console.log(d),
   });
 
   return (
     <div>
       email
-      <input onChange={(e) => handleChange(e)} ref={email} type="text" />
+      <input
+        onChange={(e) => {
+          setInput({ identifier: e.target.value, password: input.password });
+        }}
+        type="text"
+      />
       pwd
-      <input onChange={(e) => handleChange(e)} ref={pwd} type="password" />
+      <input
+        onChange={(e) => {
+          setInput({ identifier: input.identifier, password: e.target.value });
+        }}
+        type="password"
+      />
       <button onClick={() => login()}>login</button>
+      <button onClick={() => q()}>songs</button>
     </div>
   );
 }
