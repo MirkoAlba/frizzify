@@ -1,0 +1,28 @@
+{
+  "kind": "singleType",
+  "collectionName": "landings",
+  "info": {
+    "singularName": "landing",
+    "pluralName": "landings",
+    "displayName": "landing",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "blocchiTestoImmagine": {
+      "type": "dynamiczone",
+      "components": [
+        "blocco.blocco-testo-immagine"
+      ]
+    },
+    "slider": {
+      "type": "dynamiczone",
+      "components": [
+        "blocco.slider"
+      ]
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "collectionName": "components_blocco_blocco_testo_immagines",
+  "info": {
+    "displayName": "TestoImmagine",
+    "icon": "newspaper",
+    "description": ""
+  },
+  "options": {},
+  "attributes": {
+    "layoutInvertito": {
+      "type": "boolean"
+    },
+    "titolo": {
+      "type": "string"
+    },
+    "testo": {
+      "type": "richtext"
+    },
+    "immagine": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "images"
+      ]
+    },
+    "backgroundColor": {
+      "type": "enumeration",
+      "enum": [
+        "C6D4FF",
+        "ffd5c2"
+      ]
+    }
+  }
+}

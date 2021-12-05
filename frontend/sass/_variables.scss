@@ -4,7 +4,6 @@
 // // consistent naming. Ex: $nav-link-disabled-color and $modal-content-box-shadow-xs.
 
 // // Color system
-@use "sass:math";
 // // scss-docs-start gray-color-variables
 // $white:    #fff !default;
 // $gray-100: #f8f9fa !default;
@@ -371,7 +370,7 @@ $secondary: #26cf86;
 $grid-gutter-width: 30px;
 
 // // scss-docs-start spacer-variables-maps
-$spacer: 1rem !default;
+$spacer: 1rem;
 $spacers: (
   0: 0,
   1: $spacer * 0.25,
@@ -380,11 +379,9 @@ $spacers: (
   4: $spacer * 1.5,
   5: $spacer * 3,
   30: $grid-gutter-width,
-  45: math.div($grid-gutter-width, 2) + $grid-gutter-width,
+  45: 45px,
   60: $grid-gutter-width * 2,
-  75: (
-    $grid-gutter-width * 2,
-  ) + math.div($grid-gutter-width, 2),
+  75: 75px,
   90: $grid-gutter-width * 3,
 );
 // // scss-docs-end spacer-variables-maps

@@ -6,7 +6,7 @@ export default function Layout(props) {
   return (
     <Fragment>
       <Header />
-      <main>{props.children}</main>
+      <main className="main-content">{props.children}</main>
       <Footer />
     </Fragment>
   );

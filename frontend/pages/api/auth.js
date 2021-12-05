@@ -1,7 +1,10 @@
 import { serialize } from "cookie";
 
 export default function handler(req, res) {
-  if (req.method !== "POST") return;
+  if (req.method !== "POST") {
+    res.redirect(301, "/");
+    return;
+  }
 
   let token = req.body;
 

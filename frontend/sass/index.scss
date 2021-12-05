@@ -1,9 +1,11 @@
-@import "../node_modules/bootstrap/scss/bootstrap"; //imported all bootstrap scss
 @import "./variables.scss"; //override bootstrap variables
+@import "../node_modules/bootstrap/scss/bootstrap"; //imported all bootstrap scss
+
 @import "./functions";
-@import "typography";
+@import "./typography";
 
 @import "./global";
-
 @import "./layout/header";
 @import "./layout/footer";
+
+@import "./blocks";

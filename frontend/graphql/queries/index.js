@@ -29,3 +29,57 @@ export const SONGS = gql`
     }
   }
 `;
+
+export const BLOCCHI_TESTO_IMMAGINE = gql`
+  query {
+    landing {
+      data {
+        attributes {
+          blocchiTestoImmagine {
+            __typename
+            ... on ComponentBloccoBloccoTestoImmagine {
+              id
+              layoutInvertito
+              titolo
+              testo
+              backgroundColor
+              immagine {
+                data {
+                  attributes {
+                    url
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const SLIDER = gql`
+  query {
+    landing {
+      data {
+        attributes {
+          slider {
+            __typename
+            ... on ComponentBloccoSlider {
+              id
+              titolo
+              description
+              slide {
+                data {
+                  attributes {
+                    url
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;

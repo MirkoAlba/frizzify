@@ -1,58 +1,31 @@
-import { useRef, useState } from "react";
+import { Fragment } from "react";
 
-import { useMutation, useLazyQuery } from "@apollo/client";
-import { LOGIN } from "../graphql/mutations/index";
-import { SONGS } from "../graphql/queries/index";
-import { setAccessToken } from "../apollo/access-token";
+import { BLOCCHI_TESTO_IMMAGINE, SLIDER } from "../graphql/queries/index";
 
-export default function Home() {
-  const inputInitialState = {
-    identifier: "",
-    password: "",
-  };
-  const [input, setInput] = useState(inputInitialState);
+import BloccoTestoImmagine from "../components/landing/blocco-testo-immagine";
+import Slider from "../components/landing/slider";
+import RegisterLoginForm from "../components/landing/form";
 
-  const [login] = useMutation(LOGIN, {
-    onCompleted: (d) => {
-      setAccessToken(d.login.jwt);
-      fetch("/api/auth", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(d.login?.jwt),
-      });
-    },
-    onError: (e) => {
-      console.log(e.graphQLErrors[0].extensions.error.details.errors);
-    },
-    variables: {
-      input,
-    },
-  });
+import { queryClient } from "../apollo/utils";
 
-  const [q] = useLazyQuery(SONGS, {
-    onCompleted: (d) => console.log(d),
-  });
-
+export default function Home({ blocksData, sliderData }) {
   return (
-    <div>
-      email
-      <input
-        onChange={(e) => {
-          setInput({ identifier: e.target.value, password: input.password });
-        }}
-        type="text"
-      />
-      pwd
-      <input
-        onChange={(e) => {
-          setInput({ identifier: input.identifier, password: e.target.value });
-        }}
-        type="password"
-      />
-      <button onClick={() => login()}>login</button>
-      <button onClick={() => q()}>songs</button>
-    </div>
+    <Fragment>
+      <BloccoTestoImmagine data={blocksData[0]} />
+      <Slider data={sliderData} />
+      <BloccoTestoImmagine data={blocksData[1]} />
+      <RegisterLoginForm />
+    </Fragment>
   );
+}
+
+export async function getStaticProps() {
+  const blocksData = await queryClient({ query: BLOCCHI_TESTO_IMMAGINE });
+  const sliderData = await queryClient({ query: SLIDER });
+  return {
+    props: {
+      blocksData: blocksData.data.landing.data.attributes.blocchiTestoImmagine,
+      sliderData: sliderData.data.landing.data.attributes.slider,
+    },
+  };
 }

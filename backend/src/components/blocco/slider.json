@@ -1,0 +1,25 @@
+{
+  "collectionName": "components_blocco_sliders",
+  "info": {
+    "displayName": "slider",
+    "icon": "images"
+  },
+  "options": {},
+  "attributes": {
+    "titolo": {
+      "type": "string"
+    },
+    "description": {
+      "type": "text"
+    },
+    "slide": {
+      "allowedTypes": [
+        "images",
+        "files",
+        "videos"
+      ],
+      "type": "media",
+      "multiple": false
+    }
+  }
+}

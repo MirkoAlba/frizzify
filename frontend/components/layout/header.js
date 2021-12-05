@@ -47,8 +47,7 @@ export default function Header() {
 
         <Navbar.Collapse>
           <Nav className="ms-auto">
-            <Nav.Link href="#features">Features</Nav.Link>
-            <Nav.Link href="#pricing">Pricing</Nav.Link>
+            <Nav.Link href="#">Registrati | Accedi</Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>

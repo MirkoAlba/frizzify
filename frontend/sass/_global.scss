@@ -1,6 +1,17 @@
-main {
+main.main-content {
   margin-top: rem(88px);
   @include media-breakpoint-down(lg) {
     margin-top: rem(76px);
   }
+}
+
+.img-fit {
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
+  object-position: center;
+}
+
+.overflow-x-hidden {
+  overflow-x: hidden !important;
 }

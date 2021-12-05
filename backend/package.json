@@ -2,7 +2,7 @@
   "name": "backend",
   "private": true,
   "version": "0.1.0",
-  "description": "A Strapi application",
+  "description": "FrizzyAPI",
   "scripts": {
     "dev": "strapi develop",
     "start": "strapi start",
@@ -19,7 +19,7 @@
     "sqlite3": "5.0.2"
   },
   "author": {
-    "name": "A Strapi developer"
+    "name": "Mirko Albanese"
   },
   "strapi": {
     "uuid": "68b37537-a14b-4779-8c37-5c6c85771e2d"

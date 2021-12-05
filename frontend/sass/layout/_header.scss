@@ -3,6 +3,10 @@
     .nav-link {
       color: $white;
 
+      &:active {
+        color: $white;
+      }
+
       &:hover {
         color: $primary;
       }
