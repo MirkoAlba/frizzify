@@ -9,10 +9,14 @@ import { uri } from "../../apollo/api";
 
 SwiperCore.use([EffectCards]);
 
-export default function Slider({ data }) {
-  console.log(data);
+export default function Slider({ data, topColor, bottomColor }) {
   return (
-    <section className="wrapper wrapper-block-slider">
+    <section
+      className="wrapper wrapper-block-slider"
+      style={{
+        backgroundImage: `linear-gradient(15deg, #${bottomColor} 40%, #${topColor} 64%)`,
+      }}
+    >
       <Container fluid className="py-45 py-md-75 py-lg-90 overflow-x-hidden">
         <Row>
           <Col xs={12} md={8} className="offset-md-2">

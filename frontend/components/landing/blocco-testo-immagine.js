@@ -4,10 +4,17 @@ import { uri } from "../../apollo/api";
 
 export default function BloccoTestoImmagine({ data }) {
   const invertedLayout = data.layoutInvertito;
+  const bgEffect = invertedLayout
+    ? ``
+    : `linear-gradient(160deg, #E0C3FC 0%, #${data.backgroundColor} 50%)`;
+
   return (
     <section
       key={data.id}
-      style={{ backgroundColor: `#${data.backgroundColor}` }}
+      style={{
+        backgroundColor: `#${data.backgroundColor}`,
+        backgroundImage: bgEffect,
+      }}
       className="wrapper wrapper-block-testoimmagine py-45 py-md-75 py-lg-90"
     >
       <Container>

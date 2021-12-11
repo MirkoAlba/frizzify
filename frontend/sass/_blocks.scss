@@ -18,5 +18,53 @@
   }
 
   &-block-form {
+    input {
+      border-radius: rem(20px);
+      padding-top: 0.5rem;
+      padding-bottom: 0.5rem;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    button {
+      background: transparent;
+      border: none;
+      padding: 0;
+      transition: $transition-base;
+
+      &.btn-lr {
+        background-image: linear-gradient(
+          to right,
+          #4cb8c4 0%,
+          #3cd3ad 51%,
+          #4cb8c4 100%
+        );
+        margin: 10px;
+        padding: rem(10px) rem(30px);
+        text-transform: uppercase;
+        transition: 0.5s;
+        background-size: 200% auto;
+        color: white;
+        box-shadow: 0 0 20px #eee;
+        border-radius: rem(20px);
+        display: block;
+
+        &:hover {
+          background-position: right center; /* change the direction of the change here */
+          color: #fff;
+          text-decoration: none;
+        }
+      }
+
+      &.form-btn-animation {
+        border-bottom: 2px solid $secondary;
+        background: -webkit-linear-gradient($secondary, $primary);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-color: transparent;
+      }
+    }
   }
 }

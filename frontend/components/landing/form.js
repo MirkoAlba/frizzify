@@ -2,16 +2,50 @@ import { Container, Row, Col, Form } from "react-bootstrap";
 
 import { useState } from "react";
 import { useMutation } from "@apollo/client";
-import { LOGIN } from "../../graphql/mutations/index";
+import { REGISTER, LOGIN } from "../../graphql/mutations/index";
 import { setAccessToken } from "../../apollo/access-token";
 
 export default function RegisterLoginForm() {
-  const inputInitialState = {
+  const [show, setShow] = useState(false);
+
+  const [errors, setErrors] = useState();
+  if (errors) console.log("errori: ", errors);
+
+  //register
+  const registerInitialState = {
+    username: "",
+    email: "",
+    password: "",
+  };
+
+  const [registerInput, setRegisterInput] = useState(registerInitialState);
+  const [register] = useMutation(REGISTER, {
+    onCompleted: (d) => {
+      setAccessToken(d.register.jwt);
+      fetch("/api/auth", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(d.register.jwt),
+      });
+      console.log("data: ", d);
+    },
+    onError: (e) => {
+      // console.log(e.graphQLErrors[0].extensions.error.details.errors);
+      setErrors(e.graphQLErrors[0]?.extensions.error.details.errors);
+    },
+    variables: {
+      input: registerInput,
+    },
+  });
+
+  //login
+  const loginInitialState = {
     identifier: "",
     password: "",
   };
-  const [input, setInput] = useState(inputInitialState);
-
+  const [loginInput, setLoginInput] = useState(loginInitialState);
   const [login] = useMutation(LOGIN, {
     onCompleted: (d) => {
       setAccessToken(d.login.jwt);
@@ -20,14 +54,15 @@ export default function RegisterLoginForm() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(d.login?.jwt),
+        body: JSON.stringify(d.login.jwt),
       });
     },
     onError: (e) => {
-      console.log(e.graphQLErrors[0].extensions.error.details.errors);
+      // console.log(e.graphQLErrors[0].extensions.error.details.errors);
+      setErrors(e.graphQLErrors[0]?.extensions.error.details.errors);
     },
     variables: {
-      input,
+      input: loginInput,
     },
   });
 
@@ -35,25 +70,190 @@ export default function RegisterLoginForm() {
     <section className="wrapper wrapper-block-form py-45 py-md-75 py-lg-90">
       <Container>
         <Row>
-          <Col>
-            <Form.Label className="form-label">Nome</Form.Label>
-            <Form.Control
-              className="form-input"
-              type="text"
-              placeholder="Inserisci il tuo Nome"
-              //   value={registerInput.firstName}
-              //   onChange={(e) =>
-              //     setRegisterInput({
-              //       ...registerInput,
-              //       firstName: e.target.value,
-              //     })
-              //   }
-              //   isInvalid={errors?.firstName ? true : false}
-            />
-            <Form.Control.Feedback type="invalid">
-              {errors?.firstName}
-            </Form.Control.Feedback>
+          <Col xs={6} sm={{ span: 4, offset: 2 }} className="text-center">
+            <button
+              className={show === false ? "form-btn-animation" : ""}
+              onClick={() => (
+                setShow(false),
+                setRegisterInput(registerInitialState),
+                setLoginInput(loginInitialState)
+              )}
+            >
+              <h2>Registrati</h2>
+            </button>
           </Col>
+
+          <Col xs={6} sm={4} className="text-center">
+            <button
+              className={show === true ? "form-btn-animation" : ""}
+              onClick={() => (
+                setShow(true),
+                setRegisterInput(registerInitialState),
+                setLoginInput(loginInitialState)
+              )}
+            >
+              <h2>Accedi</h2>
+            </button>
+          </Col>
+          {show ? (
+            <Col sm={12} lg={{ span: 8, offset: 2 }} className="col-login">
+              <Row>
+                <Col sm={12} md={6} className="mt-3">
+                  <Form.Label className="form-label text-secondary">
+                    E-mail
+                  </Form.Label>
+                  <Form.Control
+                    className="form-input"
+                    type="email"
+                    placeholder="Inserisci la tua E-mail"
+                    value={loginInput.identifier}
+                    onChange={(e) =>
+                      setLoginInput({
+                        ...loginInput,
+                        identifier: e.target.value,
+                      })
+                    }
+                    // isInvalid={errors}
+                  />
+                  <Form.Control.Feedback type="invalid"></Form.Control.Feedback>
+                </Col>
+
+                <Col sm={12} md={6} className="mt-3">
+                  <Form.Label className="form-label text-secondary">
+                    Password
+                  </Form.Label>
+                  <Form.Control
+                    className="form-input"
+                    type="password"
+                    placeholder="Inserisci Password"
+                    value={loginInput.password}
+                    onChange={(e) =>
+                      setLoginInput({
+                        ...loginInput,
+                        password: e.target.value,
+                      })
+                    }
+                    //   isInvalid={errors?.firstName ? true : false}
+                  />
+                  <Form.Control.Feedback type="invalid"></Form.Control.Feedback>
+                </Col>
+                <Col sm={12} className="mt-3">
+                  <button onClick={() => login()} className="btn-lr">
+                    Accedi
+                  </button>
+                </Col>
+              </Row>
+            </Col>
+          ) : (
+            <Col sm={12} lg={{ span: 8, offset: 2 }} className="col-register">
+              <Row>
+                <Col sm={12} md={6} className="mt-3">
+                  <Form.Label className="form-label text-secondary">
+                    E-mail
+                  </Form.Label>
+                  <Form.Control
+                    className="form-input"
+                    type="email"
+                    placeholder="Inserisci la tua E-mail"
+                    value={registerInput.email}
+                    onChange={(e) =>
+                      setRegisterInput({
+                        ...registerInput,
+                        email: e.target.value,
+                      })
+                    }
+                    isInvalid={errors}
+                  />
+                  <Form.Control.Feedback type="invalid"></Form.Control.Feedback>
+                </Col>
+
+                <Col sm={12} md={6} className="mt-3">
+                  <Form.Label className="form-label text-secondary">
+                    Username
+                  </Form.Label>
+                  <Form.Control
+                    className="form-input"
+                    type="text"
+                    placeholder="Inserisci il tuo Username"
+                    value={registerInput.username}
+                    onChange={(e) =>
+                      setRegisterInput({
+                        ...registerInput,
+                        username: e.target.value,
+                      })
+                    }
+                    isInvalid={errors}
+                  />
+                  <Form.Control.Feedback type="invalid"></Form.Control.Feedback>
+                </Col>
+
+                <Col sm={12} md={6} className="mt-3">
+                  <Form.Label className="form-label text-secondary">
+                    Password
+                  </Form.Label>
+                  <Form.Control
+                    className="form-input"
+                    type="password"
+                    placeholder="Inserisci Password"
+                    value={registerInput.password}
+                    onChange={(e) =>
+                      setRegisterInput({
+                        ...registerInput,
+                        password: e.target.value,
+                      })
+                    }
+                    isInvalid={errors}
+                  />
+                  <Form.Control.Feedback type="invalid"></Form.Control.Feedback>
+                </Col>
+
+                <Col sm={12} md={6} className="mt-3">
+                  <Form.Label className="form-label text-secondary">
+                    Conferma Password
+                  </Form.Label>
+                  <Form.Control
+                    className="form-input"
+                    type="password"
+                    placeholder="Conferma Password"
+                    //   value={registerInput.firstName}
+                    //   onChange={(e) =>
+                    //     setRegisterInput({
+                    //       ...registerInput,
+                    //       firstName: e.target.value,
+                    //     })
+                    //   }
+                    //   isInvalid={errors?.firstName ? true : false}
+                  />
+                  <Form.Control.Feedback type="invalid"></Form.Control.Feedback>
+                </Col>
+
+                <Col sm={12} className="mt-3">
+                  <span>
+                    <Form.Check
+                      className="d-inline-block me-3"
+                      required
+                      aria-label="option 1"
+                    />
+                    Accetto le condizioni della{" "}
+                    <a href="#" className="text-secondary">
+                      Privacy
+                    </a>
+                  </span>
+                </Col>
+                <Col sm={12} className="mt-3">
+                  <button
+                    onClick={() => {
+                      console.log(registerInput);
+                      register();
+                    }}
+                    className="btn-lr"
+                  >
+                    Registrati
+                  </button>
+                </Col>
+              </Row>
+            </Col>
+          )}
         </Row>
       </Container>
     </section>

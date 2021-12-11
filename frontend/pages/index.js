@@ -12,7 +12,11 @@ export default function Home({ blocksData, sliderData }) {
   return (
     <Fragment>
       <BloccoTestoImmagine data={blocksData[0]} />
-      <Slider data={sliderData} />
+      <Slider
+        topColor={blocksData[0].backgroundColor}
+        bottomColor={blocksData[1].backgroundColor}
+        data={sliderData}
+      />
       <BloccoTestoImmagine data={blocksData[1]} />
       <RegisterLoginForm />
     </Fragment>
