@@ -8,15 +8,27 @@ import { useApollo } from "../apollo/apollo-client";
 import cookie from "cookie";
 import { setAccessToken } from "../apollo/access-token";
 
-function MyApp({ Component, pageProps, token }) {
+import { uri } from "../apollo/api";
+
+import { StoreProvider } from "easy-peasy";
+import { store } from "../src/store";
+
+function MyApp({ Component, pageProps, token, isLoggedIn }) {
   const client = useApollo(pageProps);
   setAccessToken(token);
+
   return (
-    <ApolloProvider client={client}>
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
-    </ApolloProvider>
+    <StoreProvider store={store}>
+      <ApolloProvider client={client}>
+        {isLoggedIn ? (
+          <Component {...pageProps} />
+        ) : (
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        )}
+      </ApolloProvider>
+    </StoreProvider>
   );
 }
 
@@ -30,8 +42,22 @@ MyApp.getInitialProps = async (appContext) => {
     token = cookie.parse(appContext.ctx.req?.headers.cookie);
   }
 
+  // fetcho la api per vedere se lo user corrente è loggato
+  const data = await fetch(uri + "/api/users/me", {
+    method: "GET",
+    headers: {
+      Authorization: "Bearer " + appContext.ctx.req.cookies.jid,
+    },
+  }).then((res) => {
+    return res.json();
+  });
+
   // ritorno il token per settarlo
-  return { ...appProps, token: token?.jid };
+  return {
+    ...appProps,
+    token: token?.jid,
+    isLoggedIn: data.error ? false : true, // se non è loggato ritorno unauthorized
+  };
 };
 
 export default MyApp;

@@ -7,8 +7,18 @@ import { setAccessToken } from "../../apollo/access-token";
 
 import { validLoginRegister } from "../../utils/index";
 
+import View from "../../assets/view.svg";
+import Hide from "../../assets/hide.svg";
+
 export default function RegisterLoginForm() {
   const [show, setShow] = useState(false);
+
+  //handle show password when typing
+  const [showPassword, setShowPassword] = useState("password");
+  const handleShowPassword = () => {
+    if (showPassword === "password") setShowPassword("text");
+    if (showPassword === "text") setShowPassword("password");
+  };
 
   const [errors, setErrors] = useState();
   // if (errors) console.log("errori: ", errors);
@@ -137,8 +147,19 @@ export default function RegisterLoginForm() {
                 </Col>
 
                 <Col sm={12} md={6} className="mt-3">
-                  <Form.Label className="form-label text-secondary">
+                  <Form.Label className="form-label text-secondary d-flex align-items-center">
                     Password
+                    {showPassword == "password" ? (
+                      <View
+                        className="ms-2 cursor-pointer"
+                        onClick={handleShowPassword}
+                      />
+                    ) : (
+                      <Hide
+                        className="ms-2 cursor-pointer"
+                        onClick={handleShowPassword}
+                      />
+                    )}
                   </Form.Label>
                   <Form.Control
                     className="form-input"
@@ -219,12 +240,23 @@ export default function RegisterLoginForm() {
                 </Col>
 
                 <Col sm={12} md={6} className="mt-3">
-                  <Form.Label className="form-label text-secondary">
+                  <Form.Label className="form-label text-secondary d-flex align-items-center">
                     Password
+                    {showPassword == "password" ? (
+                      <View
+                        className="ms-2 cursor-pointer"
+                        onClick={handleShowPassword}
+                      />
+                    ) : (
+                      <Hide
+                        className="ms-2 cursor-pointer"
+                        onClick={handleShowPassword}
+                      />
+                    )}
                   </Form.Label>
                   <Form.Control
                     className="form-input"
-                    type="password"
+                    type={showPassword}
                     placeholder="Inserisci Password"
                     value={registerInput.password}
                     onChange={(e) =>
@@ -246,7 +278,7 @@ export default function RegisterLoginForm() {
                   </Form.Label>
                   <Form.Control
                     className="form-input"
-                    type="password"
+                    type={showPassword}
                     placeholder="Conferma Password"
                     value={registerInput.confirmPassword}
                     onChange={(e) =>
