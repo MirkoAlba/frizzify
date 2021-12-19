@@ -5,17 +5,20 @@ import { useMutation } from "@apollo/client";
 import { REGISTER, LOGIN } from "../../graphql/mutations/index";
 import { setAccessToken } from "../../apollo/access-token";
 
+import { validLoginRegister } from "../../utils/index";
+
 export default function RegisterLoginForm() {
   const [show, setShow] = useState(false);
 
   const [errors, setErrors] = useState();
-  if (errors) console.log("errori: ", errors);
+  // if (errors) console.log("errori: ", errors);
 
   //register
   const registerInitialState = {
     username: "",
     email: "",
     password: "",
+    confirmPassword: "",
   };
 
   const [registerInput, setRegisterInput] = useState(registerInitialState);
@@ -29,14 +32,19 @@ export default function RegisterLoginForm() {
         },
         body: JSON.stringify(d.register.jwt),
       });
-      console.log("data: ", d);
+      // console.log("data: ", d);
     },
     onError: (e) => {
-      // console.log(e.graphQLErrors[0].extensions.error.details.errors);
-      setErrors(e.graphQLErrors[0]?.extensions.error.details.errors);
+      if (e.graphQLErrors[0].message == "Email is already taken") {
+        setErrors({ errors: { email: "Email gia esistente!" } });
+      }
     },
     variables: {
-      input: registerInput,
+      input: {
+        username: registerInput.username,
+        email: registerInput.email,
+        password: registerInput.password,
+      },
     },
   });
 
@@ -58,8 +66,14 @@ export default function RegisterLoginForm() {
       });
     },
     onError: (e) => {
-      // console.log(e.graphQLErrors[0].extensions.error.details.errors);
-      setErrors(e.graphQLErrors[0]?.extensions.error.details.errors);
+      if (e.graphQLErrors[0].message == "Invalid identifier or password") {
+        setErrors({
+          errors: {
+            identifier: "Email o password errate!",
+            password: "Email o password errate!",
+          },
+        });
+      }
     },
     variables: {
       input: loginInput,
@@ -76,7 +90,8 @@ export default function RegisterLoginForm() {
               onClick={() => (
                 setShow(false),
                 setRegisterInput(registerInitialState),
-                setLoginInput(loginInitialState)
+                setLoginInput(loginInitialState),
+                setErrors({})
               )}
             >
               <h2>Registrati</h2>
@@ -89,7 +104,8 @@ export default function RegisterLoginForm() {
               onClick={() => (
                 setShow(true),
                 setRegisterInput(registerInitialState),
-                setLoginInput(loginInitialState)
+                setLoginInput(loginInitialState),
+                setErrors({})
               )}
             >
               <h2>Accedi</h2>
@@ -113,9 +129,11 @@ export default function RegisterLoginForm() {
                         identifier: e.target.value,
                       })
                     }
-                    // isInvalid={errors}
+                    isInvalid={errors?.errors?.identifier}
                   />
-                  <Form.Control.Feedback type="invalid"></Form.Control.Feedback>
+                  <Form.Control.Feedback type="invalid">
+                    {errors?.errors?.identifier}
+                  </Form.Control.Feedback>
                 </Col>
 
                 <Col sm={12} md={6} className="mt-3">
@@ -133,12 +151,21 @@ export default function RegisterLoginForm() {
                         password: e.target.value,
                       })
                     }
-                    //   isInvalid={errors?.firstName ? true : false}
+                    isInvalid={errors?.errors?.password}
                   />
-                  <Form.Control.Feedback type="invalid"></Form.Control.Feedback>
+                  <Form.Control.Feedback type="invalid">
+                    {errors?.errors?.password}
+                  </Form.Control.Feedback>
                 </Col>
                 <Col sm={12} className="mt-3">
-                  <button onClick={() => login()} className="btn-lr">
+                  <button
+                    onClick={async () => {
+                      setErrors(
+                        await validLoginRegister("login", loginInput, login)
+                      );
+                    }}
+                    className="btn-lr"
+                  >
                     Accedi
                   </button>
                 </Col>
@@ -162,9 +189,11 @@ export default function RegisterLoginForm() {
                         email: e.target.value,
                       })
                     }
-                    isInvalid={errors}
+                    isInvalid={errors?.errors?.email}
                   />
-                  <Form.Control.Feedback type="invalid"></Form.Control.Feedback>
+                  <Form.Control.Feedback type="invalid">
+                    {errors?.errors?.email}
+                  </Form.Control.Feedback>
                 </Col>
 
                 <Col sm={12} md={6} className="mt-3">
@@ -182,9 +211,11 @@ export default function RegisterLoginForm() {
                         username: e.target.value,
                       })
                     }
-                    isInvalid={errors}
+                    isInvalid={errors?.errors?.username}
                   />
-                  <Form.Control.Feedback type="invalid"></Form.Control.Feedback>
+                  <Form.Control.Feedback type="invalid">
+                    {errors?.errors?.username}
+                  </Form.Control.Feedback>
                 </Col>
 
                 <Col sm={12} md={6} className="mt-3">
@@ -202,9 +233,11 @@ export default function RegisterLoginForm() {
                         password: e.target.value,
                       })
                     }
-                    isInvalid={errors}
+                    isInvalid={errors?.errors?.password}
                   />
-                  <Form.Control.Feedback type="invalid"></Form.Control.Feedback>
+                  <Form.Control.Feedback type="invalid">
+                    {errors?.errors?.password}
+                  </Form.Control.Feedback>
                 </Col>
 
                 <Col sm={12} md={6} className="mt-3">
@@ -215,16 +248,18 @@ export default function RegisterLoginForm() {
                     className="form-input"
                     type="password"
                     placeholder="Conferma Password"
-                    //   value={registerInput.firstName}
-                    //   onChange={(e) =>
-                    //     setRegisterInput({
-                    //       ...registerInput,
-                    //       firstName: e.target.value,
-                    //     })
-                    //   }
-                    //   isInvalid={errors?.firstName ? true : false}
+                    value={registerInput.confirmPassword}
+                    onChange={(e) =>
+                      setRegisterInput({
+                        ...registerInput,
+                        confirmPassword: e.target.value,
+                      })
+                    }
+                    isInvalid={errors?.errors?.confirmPassword}
                   />
-                  <Form.Control.Feedback type="invalid"></Form.Control.Feedback>
+                  <Form.Control.Feedback type="invalid">
+                    {errors?.errors?.confirmPassword}
+                  </Form.Control.Feedback>
                 </Col>
 
                 <Col sm={12} className="mt-3">
@@ -242,9 +277,14 @@ export default function RegisterLoginForm() {
                 </Col>
                 <Col sm={12} className="mt-3">
                   <button
-                    onClick={() => {
-                      console.log(registerInput);
-                      register();
+                    onClick={async () => {
+                      setErrors(
+                        await validLoginRegister(
+                          "register",
+                          registerInput,
+                          register
+                        )
+                      );
                     }}
                     className="btn-lr"
                   >
