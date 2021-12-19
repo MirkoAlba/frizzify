@@ -18,6 +18,10 @@
   }
 
   &-block-form {
+    .container {
+      min-height: 420px;
+    }
+
     input {
       border-radius: rem(20px);
       padding-top: 0.5rem;

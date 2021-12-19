@@ -9,7 +9,9 @@ export default function Header() {
   return (
     <Navbar expand="lg" bg="black" className="fixed-top py-2 py-lg-4">
       <Container className="d-flex align-items-center justify-content-between h-100">
-        <Navbar.Brand href="#">logo</Navbar.Brand>
+        <Navbar.Brand href="#">
+          <h3 className="text-white">Logo</h3>
+        </Navbar.Brand>
 
         <Navbar.Toggle aria-controls="basic-navbar-nav">
           <div className="plates">
