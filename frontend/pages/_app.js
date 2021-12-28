@@ -38,7 +38,7 @@ MyApp.getInitialProps = async (appContext) => {
   // prima che la mia app venga renderizzata controllo che il token
   // sia presente in tutte le req quindi lo prendo e lo parso
   var token;
-  if (appContext.ctx.req?.headers.cookie) {
+  if (appContext.ctx.req?.headers?.cookie) {
     token = cookie.parse(appContext.ctx.req?.headers.cookie);
   }
 
@@ -46,17 +46,18 @@ MyApp.getInitialProps = async (appContext) => {
   const data = await fetch(uri + "/api/users/me", {
     method: "GET",
     headers: {
-      Authorization: "Bearer " + appContext.ctx.req.cookies.jid,
+      Authorization: "Bearer " + appContext?.ctx?.req?.cookies?.jid,
     },
   }).then((res) => {
     return res.json();
   });
+  const isLoggedIn = data.error ? false : true;
 
   // ritorno il token per settarlo
   return {
     ...appProps,
     token: token?.jid,
-    isLoggedIn: data.error ? false : true, // se non è loggato ritorno unauthorized
+    isLoggedIn, // se non è loggato ritorno unauthorized
   };
 };
 

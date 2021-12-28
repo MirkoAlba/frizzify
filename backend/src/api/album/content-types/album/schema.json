@@ -4,7 +4,8 @@
   "info": {
     "singularName": "album",
     "pluralName": "albums",
-    "displayName": "album"
+    "displayName": "album",
+    "description": ""
   },
   "options": {
     "draftAndPublish": true
@@ -14,17 +15,15 @@
     "name": {
       "type": "string"
     },
-    "description": {
-      "type": "text"
-    },
     "cover": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
       "allowedTypes": [
         "images",
         "files",
         "videos"
-      ],
-      "type": "media",
-      "multiple": false
+      ]
     },
     "releaseDate": {
       "type": "datetime"
@@ -32,17 +31,20 @@
     "genre": {
       "type": "string"
     },
-    "song": {
+    "songs": {
       "type": "relation",
-      "relation": "manyToOne",
+      "relation": "oneToMany",
       "target": "api::song.song",
-      "inversedBy": "albums"
+      "mappedBy": "album"
     },
     "artist": {
       "type": "relation",
       "relation": "manyToOne",
       "target": "api::artist.artist",
       "inversedBy": "albums"
+    },
+    "description": {
+      "type": "richtext"
     }
   }
 }

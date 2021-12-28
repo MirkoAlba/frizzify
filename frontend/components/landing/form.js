@@ -10,7 +10,15 @@ import { validLoginRegister } from "../../utils/index";
 import View from "../../assets/view.svg";
 import Hide from "../../assets/hide.svg";
 
+import { useRouter } from "next/router";
+
+import { useStoreActions } from "easy-peasy";
+
 export default function RegisterLoginForm() {
+  const router = useRouter();
+
+  const setUserId = useStoreActions((actions) => actions.setUserId);
+
   const [show, setShow] = useState(false);
 
   //handle show password when typing
@@ -42,7 +50,9 @@ export default function RegisterLoginForm() {
         },
         body: JSON.stringify(d.register.jwt),
       });
-      // console.log("data: ", d);
+      setUserId(d.register.user);
+      // router.reload(router.asPath);
+      window.location.href = "/";
     },
     onError: (e) => {
       if (e.graphQLErrors[0].message == "Email is already taken") {
@@ -74,6 +84,11 @@ export default function RegisterLoginForm() {
         },
         body: JSON.stringify(d.login.jwt),
       });
+      console.log(d);
+      setUserId(d.login.user);
+
+      // router.reload(router.asPath);
+      // window.location.href = "/";
     },
     onError: (e) => {
       if (e.graphQLErrors[0].message == "Invalid identifier or password") {
@@ -163,7 +178,7 @@ export default function RegisterLoginForm() {
                   </Form.Label>
                   <Form.Control
                     className="form-input"
-                    type="password"
+                    type={showPassword}
                     placeholder="Inserisci Password"
                     value={loginInput.password}
                     onChange={(e) =>

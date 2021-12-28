@@ -7,6 +7,7 @@ import Slider from "../components/landing/slider";
 import RegisterLoginForm from "../components/landing/form";
 
 import { queryClient } from "../apollo/utils";
+import { uri } from "../apollo/api";
 
 export default function Home({ blocksData, sliderData }) {
   return (
@@ -26,6 +27,7 @@ export default function Home({ blocksData, sliderData }) {
 export async function getStaticProps() {
   const blocksData = await queryClient({ query: BLOCCHI_TESTO_IMMAGINE });
   const sliderData = await queryClient({ query: SLIDER });
+
   return {
     props: {
       blocksData: blocksData.data.landing.data.attributes.blocchiTestoImmagine,

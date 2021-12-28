@@ -15,9 +15,6 @@
     "artname": {
       "type": "string"
     },
-    "description": {
-      "type": "text"
-    },
     "picture": {
       "type": "media",
       "multiple": false,
@@ -33,6 +30,9 @@
       "relation": "oneToMany",
       "target": "api::album.album",
       "mappedBy": "artist"
+    },
+    "description": {
+      "type": "richtext"
     }
   }
 }

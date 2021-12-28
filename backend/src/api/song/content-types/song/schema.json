@@ -38,11 +38,11 @@
         "videos"
       ]
     },
-    "albums": {
+    "album": {
       "type": "relation",
-      "relation": "oneToMany",
+      "relation": "manyToOne",
       "target": "api::album.album",
-      "mappedBy": "song"
+      "inversedBy": "songs"
     }
   }
 }

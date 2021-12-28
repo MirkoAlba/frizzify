@@ -4,6 +4,7 @@ export const REGISTER = gql`
   mutation register($input: UsersPermissionsRegisterInput!) {
     register(input: $input) {
       user {
+        id
         username
         email
       }
@@ -17,6 +18,7 @@ export const LOGIN = gql`
     login(input: $input) {
       jwt
       user {
+        id
         username
         email
       }

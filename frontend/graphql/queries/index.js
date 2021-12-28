@@ -83,3 +83,12 @@ export const SLIDER = gql`
     }
   }
 `;
+
+export const ME = gql`
+  query Me {
+    me {
+      id
+      username
+    }
+  }
+`;
