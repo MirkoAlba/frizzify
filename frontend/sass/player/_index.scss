@@ -1,0 +1,18 @@
+.playing-now-bar {
+  border: 2px solid green;
+
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+
+.wrapper-main-view {
+  .left-nav {
+    border: 2px solid red;
+  }
+
+  .main-view {
+    border: 2px solid blue;
+  }
+}

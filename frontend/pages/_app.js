@@ -20,13 +20,9 @@ function MyApp({ Component, pageProps, token, isLoggedIn }) {
   return (
     <StoreProvider store={store}>
       <ApolloProvider client={client}>
-        {isLoggedIn ? (
-          <Component {...pageProps} />
-        ) : (
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        )}
+        <Layout isLoggedIn={isLoggedIn}>
+          <Component isLoggedIn={isLoggedIn} {...pageProps} />
+        </Layout>
       </ApolloProvider>
     </StoreProvider>
   );

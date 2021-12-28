@@ -7,10 +7,11 @@ import Slider from "../components/landing/slider";
 import RegisterLoginForm from "../components/landing/form";
 
 import { queryClient } from "../apollo/utils";
-import { uri } from "../apollo/api";
 
-export default function Home({ blocksData, sliderData }) {
-  return (
+export default function Home({ blocksData, sliderData, isLoggedIn }) {
+  return isLoggedIn ? (
+    "content"
+  ) : (
     <Fragment>
       <BloccoTestoImmagine data={blocksData[0]} />
       <Slider

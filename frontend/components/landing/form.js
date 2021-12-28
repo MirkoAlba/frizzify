@@ -51,7 +51,6 @@ export default function RegisterLoginForm() {
         body: JSON.stringify(d.register.jwt),
       });
       setUserId(d.register.user);
-      // router.reload(router.asPath);
       window.location.href = "/";
     },
     onError: (e) => {
@@ -84,11 +83,8 @@ export default function RegisterLoginForm() {
         },
         body: JSON.stringify(d.login.jwt),
       });
-      console.log(d);
       setUserId(d.login.user);
-
-      // router.reload(router.asPath);
-      // window.location.href = "/";
+      window.location.href = "/";
     },
     onError: (e) => {
       if (e.graphQLErrors[0].message == "Invalid identifier or password") {
