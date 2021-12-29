@@ -1,3 +1,3 @@
 export default function PlayingNowBar() {
-  return <div className="playing-now-bar">barra</div>;
+  return <div className="player-main__bar">barra</div>;
 }

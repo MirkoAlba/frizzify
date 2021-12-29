@@ -9,11 +9,11 @@ import LeftNav from "../web-player/left-nav";
 export default function Layout(props) {
   return props.isLoggedIn ? (
     <Fragment>
-      <div className="wrapper-main-view">
+      <main className="player-main">
         <LeftNav />
-        <main className="main-view">{props.children}</main>
-      </div>
-      <PlayingNowBar />
+        <section className="player-main__content">{props.children}</section>
+        <PlayingNowBar />
+      </main>
     </Fragment>
   ) : (
     <Fragment>

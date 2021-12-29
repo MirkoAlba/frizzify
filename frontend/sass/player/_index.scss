@@ -1,18 +1,44 @@
-.playing-now-bar {
-  border: 2px solid green;
+.player-main {
+  border: 2px solid red;
 
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-}
+  display: grid;
+  color: gray;
+  height: 100vh;
+  grid-template-columns: var(--sidebarWidth) 1fr;
+  grid-template-rows:
+    1fr
+    70px;
+  grid-template-areas:
+    "menu content aside"
+    "bar bar bar";
 
-.wrapper-main-view {
-  .left-nav {
-    border: 2px solid red;
+  &__nav {
+    border: 2px solid green;
+    position: relative;
+    grid-area: menu;
+
+    &--resizer {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+      width: 5px;
+      cursor: col-resize;
+      resize: horizontal;
+
+      &:hover {
+        background-color: #c1c3c5b4;
+      }
+    }
   }
 
-  .main-view {
+  &__content {
     border: 2px solid blue;
+    grid-area: content;
+  }
+
+  &__bar {
+    border: 2px solid yellow;
+    grid-area: bar;
   }
 }

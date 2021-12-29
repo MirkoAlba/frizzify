@@ -1,0 +1,26 @@
+{
+  "kind": "collectionType",
+  "collectionName": "queues",
+  "info": {
+    "singularName": "queue",
+    "pluralName": "queues",
+    "displayName": "queue"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "users_permissions_user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "queue"
+    },
+    "songs": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::song.song"
+    }
+  }
+}
