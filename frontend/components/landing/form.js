@@ -41,9 +41,9 @@ export default function RegisterLoginForm() {
 
   const [registerInput, setRegisterInput] = useState(registerInitialState);
   const [register] = useMutation(REGISTER, {
-    onCompleted: (d) => {
+    onCompleted: async (d) => {
       setAccessToken(d.register.jwt);
-      fetch("/api/auth", {
+      const response = await fetch("/api/auth", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -51,10 +51,14 @@ export default function RegisterLoginForm() {
         body: JSON.stringify(d.register.jwt),
       });
       setUserId(d.register.user);
-      window.location.href = "/";
+      setUserId(d.login.user);
+      if (response) {
+        window.location.href = "/";
+      }
     },
     onError: (e) => {
-      if (e.graphQLErrors[0].message == "Email is already taken") {
+      console.log(e);
+      if (e?.graphQLErrors[0]?.message == "Email is already taken") {
         setErrors({ errors: { email: "Email gia esistente!" } });
       }
     },
@@ -74,9 +78,9 @@ export default function RegisterLoginForm() {
   };
   const [loginInput, setLoginInput] = useState(loginInitialState);
   const [login] = useMutation(LOGIN, {
-    onCompleted: (d) => {
+    onCompleted: async (d) => {
       setAccessToken(d.login.jwt);
-      fetch("/api/auth", {
+      const response = await fetch("/api/auth", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -84,10 +88,13 @@ export default function RegisterLoginForm() {
         body: JSON.stringify(d.login.jwt),
       });
       setUserId(d.login.user);
-      window.location.href = "/";
+      if (response) {
+        window.location.href = "/";
+      }
     },
     onError: (e) => {
-      if (e.graphQLErrors[0].message == "Invalid identifier or password") {
+      console.log(e);
+      if (e?.graphQLErrors[0]?.message == "Invalid identifier or password") {
         setErrors({
           errors: {
             identifier: "Email o password errate!",

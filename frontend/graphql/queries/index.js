@@ -1,5 +1,60 @@
 import { gql } from "@apollo/client";
 
+export const SONG = gql`
+  query song {
+    song(id: 2) {
+      data {
+        id
+        attributes {
+          name
+          description
+          file {
+            data {
+              attributes {
+                url
+              }
+            }
+          }
+          cover {
+            data {
+              attributes {
+                url
+              }
+            }
+          }
+          album {
+            data {
+              id
+              attributes {
+                name
+                description
+                releaseDate
+                genre
+                cover {
+                  data {
+                    attributes {
+                      url
+                    }
+                  }
+                }
+                artist {
+                  data {
+                    id
+                    attributes {
+                      artname
+                      description
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
 export const SONGS = gql`
   query {
     songs {
@@ -11,7 +66,6 @@ export const SONGS = gql`
           file {
             data {
               attributes {
-                name
                 url
               }
             }
@@ -19,8 +73,33 @@ export const SONGS = gql`
           cover {
             data {
               attributes {
-                name
                 url
+              }
+            }
+          }
+          album {
+            data {
+              id
+              attributes {
+                name
+                cover {
+                  data {
+                    attributes {
+                      url
+                    }
+                  }
+                }
+                genre
+                artist {
+                  data {
+                    id
+                    attributes {
+                      artname
+                      description
+                    }
+                  }
+                }
+                description
               }
             }
           }

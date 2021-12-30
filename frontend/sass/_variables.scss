@@ -73,20 +73,29 @@ $secondary: #26cf86;
 // $warning:       $yellow !default;
 // $danger:        $red !default;
 // $light:         $gray-100 !default;
-$dark:          #292929;
-// // scss-docs-end theme-color-variables
+$dark: #292929;
 
+// player palette
+// player palette - dark
+$nav: #0c0c0c;
+$bar: #1f1f1f;
+
+$bar-height: 90px;
+
+// // scss-docs-end theme-color-variables
 // // scss-docs-start theme-colors-map
-// $theme-colors: (
-//   "primary":    $primary,
-//   "secondary":  $secondary,
-//   "success":    $success,
-//   "info":       $info,
-//   "warning":    $warning,
-//   "danger":     $danger,
-//   "light":      $light,
-//   "dark":       $dark
-// ) !default;
+$theme-colors: (
+  "primary": $primary,
+  "secondary": $secondary,
+  // "success":    $success,
+  // "info":       $info,
+  // "warning":    $warning,
+  // "danger":     $danger,
+  // "light":      $light,
+  "dark": $dark,
+  "nav": $nav,
+  "bar": $bar,
+);
 // // scss-docs-end theme-colors-map
 
 // // The contrast ratio to reach against white, to determine if color changes from "light" to "dark". Acceptable values for WCAG 2.0 are 3, 4.5 and 7.

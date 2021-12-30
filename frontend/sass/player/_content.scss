@@ -1,0 +1,27 @@
+.player-main {
+  display: grid;
+  height: 100vh;
+  grid-template-columns: var(--sidebarWidth) 1fr;
+  grid-template-rows:
+    1fr
+    $bar-height;
+  grid-template-areas:
+    "menu content aside"
+    "bar bar bar";
+
+  &__content {
+    grid-area: content;
+  }
+
+  @include media-breakpoint-down(xl) {
+    border: 2px solid gray;
+    grid-template-columns: unset;
+    grid-template-areas:
+      "content content content"
+      "bar bar bar";
+
+    &__nav {
+      display: none;
+    }
+  }
+}

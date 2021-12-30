@@ -6,7 +6,7 @@ import { ApolloProvider } from "@apollo/client";
 import { useApollo } from "../apollo/apollo-client";
 
 import cookie from "cookie";
-import { setAccessToken } from "../apollo/access-token";
+import { getAccessToken, setAccessToken } from "../apollo/access-token";
 
 import { uri } from "../apollo/api";
 
@@ -34,15 +34,18 @@ MyApp.getInitialProps = async (appContext) => {
   // prima che la mia app venga renderizzata controllo che il token
   // sia presente in tutte le req quindi lo prendo e lo parso
   var token;
-  if (appContext.ctx.req?.headers?.cookie) {
-    token = cookie.parse(appContext.ctx.req?.headers.cookie);
+  if (appContext.ctx.req?.headers.cookie) {
+    var c = cookie.parse(appContext.ctx.req.headers.cookie);
+    token = c.jid;
+  } else {
+    token = getAccessToken();
   }
 
   // fetcho la api per vedere se lo user corrente è loggato
   const data = await fetch(uri + "/api/users/me", {
     method: "GET",
     headers: {
-      Authorization: "Bearer " + appContext?.ctx?.req?.cookies?.jid,
+      Authorization: "Bearer " + token,
     },
   }).then((res) => {
     return res.json();
@@ -52,7 +55,7 @@ MyApp.getInitialProps = async (appContext) => {
   // ritorno il token per settarlo
   return {
     ...appProps,
-    token: token?.jid,
+    token,
     isLoggedIn, // se non è loggato ritorno unauthorized
   };
 };

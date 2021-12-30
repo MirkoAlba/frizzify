@@ -61,14 +61,6 @@
           text-decoration: none;
         }
       }
-
-      &.form-btn-animation {
-        border-bottom: 2px solid $secondary;
-        background: -webkit-linear-gradient($secondary, $primary);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-color: transparent;
-      }
     }
   }
 }

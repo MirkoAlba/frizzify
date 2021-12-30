@@ -1,0 +1,61 @@
+.player-main {
+  &__nav {
+    position: relative;
+    grid-area: menu;
+
+    &--resizer {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+      width: 5px;
+      cursor: col-resize;
+      resize: horizontal;
+
+      &:hover {
+        background-color: #c1c3c5b4;
+      }
+    }
+
+    &--content {
+      .menu {
+        list-style: none;
+
+        li {
+          padding-left: 1rem;
+          padding-right: 1rem;
+
+          &.active {
+            background-color: #282828;
+            border-radius: rem(5px);
+            a {
+              opacity: 1;
+            }
+          }
+        }
+
+        li a {
+          text-decoration: none;
+          color: $white;
+          opacity: 0.8;
+          display: flex;
+          align-items: center;
+          transition: opacity 0.2s ease-in-out;
+          padding-top: 0.5rem;
+          padding-bottom: 0.5rem;
+
+          &:hover {
+            opacity: 1;
+            transition: opacity 0.2s ease-in-out;
+          }
+
+          svg {
+            width: rem(25px);
+            height: rem(25px);
+            margin-right: 0.5rem;
+          }
+        }
+      }
+    }
+  }
+}
