@@ -10,7 +10,50 @@ import { queryClient } from "../apollo/utils";
 
 export default function Home({ blocksData, sliderData, isLoggedIn }) {
   return isLoggedIn ? (
-    "content"
+    <Fragment>
+      <h2>ciao</h2>
+      <h2>ciao</h2>
+      <h2>ciao</h2>
+      <h2>ciao</h2>
+      <h2>ciao</h2>
+      <h2>ciao</h2>
+      <h2>ciao</h2>
+      <h2>ciao</h2>
+      <h2>ciao</h2>
+      <h2>ciao</h2>
+      <h2>ciao</h2>
+      <h2>ciao</h2>
+      <h2>ciao</h2>
+      <h2>ciao</h2>
+      <h2>ciao</h2>
+      <h2>ciao</h2>
+      <h2>ciao</h2>
+      <h2>ciao</h2>
+      <h2>ciao</h2>
+      <h2>ciao</h2>
+      <h2>ciao</h2>
+      <h2>ciao</h2>
+      <h2>ciao</h2>
+      <h2>ciao</h2>
+      <h2>ciao</h2>
+      <h2>ciao</h2>
+      <h2>ciao</h2>
+      <h2>ciao</h2>
+      <h2>ciao</h2>
+      <h2>ciao</h2>
+      <h2>ciao</h2>
+      <h2>ciao</h2>
+      <h2>ciao</h2>
+      <h2>ciao</h2>
+      <h2>ciao</h2>
+      <h2>ciao</h2>
+      <h2>ciao</h2>
+      <h2>ciao</h2>
+      <h2>ciao</h2>
+      <h2>ciao</h2>
+      <h2>ciao</h2>
+      <h2>ciao</h2>
+    </Fragment>
   ) : (
     <Fragment>
       <BloccoTestoImmagine data={blocksData[0]} />

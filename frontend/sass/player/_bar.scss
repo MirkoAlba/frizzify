@@ -2,5 +2,95 @@
   &__bar {
     border-top: 1px solid rgba(255, 255, 255, 0.5);
     grid-area: bar;
+
+    svg {
+      width: rem(20px);
+      height: rem(20px);
+      opacity: 0.8;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+
+    .song-details {
+      p {
+        margin: 0;
+      }
+      &__name {
+        font-size: rem(14px);
+      }
+      &__artist {
+        font-size: rem(12px);
+        opacity: 0.8;
+      }
+    }
+
+    .wrapper-player {
+      width: 100%;
+      height: 100%;
+
+      .wrapper-playback-bar {
+        position: relative;
+        opacity: 0.8;
+        width: 100%;
+        min-width: 200px;
+        max-width: 600px;
+        height: 4px;
+
+        &:hover {
+          opacity: 1;
+        }
+
+        .dragger {
+          position: absolute;
+          top: -90%;
+          left: var(--progress);
+          width: rem(12px);
+          height: rem(12px);
+          border-radius: 50%;
+          background-color: $white;
+          z-index: 2;
+        }
+      }
+
+      .playback-bar {
+        &__time {
+          font-size: rem(12px);
+          opacity: 0.8;
+          color: $white;
+          margin: 0;
+        }
+
+        &__progress {
+          overflow-x: hidden;
+          width: 100%;
+          height: 100%;
+          background-color: rgba($color: $white, $alpha: 0.7);
+
+          &--current-time {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            background-color: $primary;
+          }
+        }
+      }
+
+      .btn- {
+        &play {
+          width: rem(35px);
+          height: rem(35px);
+          fill: white;
+        }
+
+        &pause {
+          width: rem(35px);
+          height: rem(35px);
+          fill: white;
+        }
+      }
+    }
   }
 }

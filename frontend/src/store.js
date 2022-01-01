@@ -19,7 +19,7 @@ export const store = createStore(
     }),
 
     setMenuWidth: action((state, payload) => {
-      state.user.options.menuWidth = payload;
+      state.user.options.menuWidth = payload ? payload : 200;
     }),
 
     setUserQueue: action((state, payload) => {

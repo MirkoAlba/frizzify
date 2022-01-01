@@ -29,7 +29,7 @@ export async function validLoginRegister(operation, input, callback) {
     });
 }
 
-export function extractSongsMetadata(songs) {
+export function formatSongs(songs) {
   return songs.map((song) => {
     return {
       id: song.id,
@@ -58,7 +58,7 @@ export function extractSongsMetadata(songs) {
   });
 }
 
-export function extractSongMetadata(song) {
+export function formatSong(song) {
   return {
     id: song.data.id,
     name: song.data.attributes.name,
@@ -90,4 +90,15 @@ export function extractSongMetadata(song) {
       },
     },
   };
+}
+
+export function convertDuration(time) {
+  var mins = Math.floor(time / 60);
+  mins = String(mins);
+  var secs = Math.floor(time % 60);
+  if (secs < 10) {
+    secs = "0" + String(secs);
+  }
+
+  return mins + ":" + secs;
 }
