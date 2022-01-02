@@ -11,6 +11,10 @@ import { uri as apiUri } from "../../apollo/api";
 
 import Image from "next/image";
 
+// store
+import { useStoreActions, useStoreState } from "easy-peasy";
+
+// player components
 import ReactAudioPlayer from "react-audio-player";
 import Draggable from "react-draggable";
 
@@ -29,6 +33,12 @@ export default function PlayingNowBar() {
   //   }
   // });
 
+  // store
+  const storeState = useStoreState((state) => state);
+  const setCurrentSongInfo = useStoreActions(
+    (actions) => actions.setCurrentSongInfo
+  );
+
   const [song, setSong] = useState();
   const { loading } = useQuery(SONG, {
     onCompleted: (d) => setSong(formatSong(d.song)),
@@ -41,23 +51,67 @@ export default function PlayingNowBar() {
   };
 
   const [audio, setAudio] = useState(); // audio object
-  const [time, setTime] = useState({}); // duration, currentDuration, progress
+  const [time, setTime] = useState(
+    storeState.user.queue.currentSong?.time
+      ? storeState.user.queue.currentSong.time
+      : {}
+  ); // duration, currentDuration, progress
 
   const draggerRef = useRef();
-  const inputRef = useRef();
+  const [draggerPosition, setDraggerPosition] = useState({
+    x: storeState.user.queue.currentSong?.draggerPosition.x
+      ? storeState.user.queue.currentSong.draggerPosition.x
+      : 0,
+    y: 0,
+  });
 
-  const handleDrag = (e) => {
-    const rawDuration = Math.ceil(audio?.duration);
-    const parentWidth = draggerRef.current.parentElement.offsetWidth;
+  // init store
+  useEffect(() => {
+    setCurrentSongInfo({ time, draggerPosition });
+  }, []);
 
-    console.log(e);
+  const handleDrag = () => {
+    const rawDuration = Math.ceil(audio?.duration); // durata in secondi
+    const barWidth = draggerRef.current.parentElement.offsetWidth; // larghezza barra in px
+    const draggerCurrentPosition = window
+      .getComputedStyle(draggerRef.current)
+      .getPropertyValue("transform")
+      .match(/(-?[0-9\.]+)/g)[4]; // posizione X del dragger nella barra in px
+
+    const perc =
+      (draggerCurrentPosition * 100) / barWidth < 0
+        ? 0
+        : (draggerCurrentPosition * 100) / barWidth;
+    const finalDuration =
+      (rawDuration * perc) / 100 < 0 ? 0 : (rawDuration * perc) / 100; // posizione dragger nella barra in %
+
+    setTime({
+      ...time,
+      currentDuration: convertDuration(finalDuration),
+      currentRawDuration: Math.ceil(audio.currentTime),
+      progress: perc,
+    });
+
+    audio.currentTime = Math.ceil(finalDuration);
+    setDraggerPosition({ x: parseInt(draggerCurrentPosition), y: 0 });
+
+    setCurrentSongInfo({ time, draggerPosition });
   };
 
+  const moveDragger = () => {
+    const barWidth = draggerRef.current.parentElement.offsetWidth; // larghezza barra in px
+    const draggerXpos = (time.progress * barWidth) / 100; // posizione dragger in px
+    setDraggerPosition({ x: Math.ceil(draggerXpos), y: 0 });
+
+    setCurrentSongInfo({ time, draggerPosition });
+  };
+
+  // handle dragger position on window resize
   useEffect(() => {
-    document.documentElement.style.setProperty(
-      "--progress",
-      `calc(${time?.progress + "%"} - 6px)`
-    );
+    window.addEventListener("resize", moveDragger);
+    return () => {
+      window.removeEventListener("resize", moveDragger);
+    };
   });
 
   if (song && !loading) {
@@ -102,7 +156,7 @@ export default function PlayingNowBar() {
               </button>
 
               <div className="playback-bar w-100 d-flex justify-content-center align-items-center pt-1">
-                <p className="playback-bar__time me-2">
+                <p className="playback-bar__time ms-2">
                   {time.currentDuration}
                 </p>
 
@@ -117,25 +171,18 @@ export default function PlayingNowBar() {
                   </div>
                   <Draggable
                     axis="x"
-                    nodeRef={draggerRef}
-                    onDrag={(e) => handleDrag(e)}
                     bounds="parent"
+                    nodeRef={draggerRef}
+                    onDrag={() => {
+                      handleDrag();
+                    }}
+                    position={draggerPosition}
                   >
                     <div ref={draggerRef} className="dragger"></div>
                   </Draggable>
-                  <input
-                    className=""
-                    ref={inputRef}
-                    type="range"
-                    value={Math.ceil(audio?.currentTime).toString()}
-                    readOnly
-                    min="0"
-                    max={Math.ceil(audio?.duration).toString()}
-                    step={1}
-                  />
                 </div>
 
-                <p className="playback-bar__time ms-2">{time.duration}</p>
+                <p className="playback-bar__time me-2">{time.duration}</p>
               </div>
 
               <ReactAudioPlayer
@@ -145,11 +192,29 @@ export default function PlayingNowBar() {
                 src={apiUri + songFile}
                 listenInterval={500}
                 onLoadedMetadata={() => {
+                  setTime(
+                    Object.keys(storeState.user.queue.currentSong.time).length >
+                      0
+                      ? storeState.user.queue.currentSong.time
+                      : {
+                          duration: convertDuration(audio?.duration),
+                          currentDuration: "0:00",
+                          currentRawDuration: Math.ceil(audio.currentTime),
+                          progress: 0,
+                        }
+                  );
+                  audio.currentTime = time.currentRawDuration
+                    ? time.currentRawDuration
+                    : 0;
+                }}
+                onListen={() => {
                   setTime({
-                    duration: convertDuration(audio?.duration),
-                    currentDuration: "0:00",
-                    progress: 0,
+                    ...time,
+                    currentDuration: convertDuration(audio?.currentTime),
+                    currentRawDuration: Math.ceil(audio.currentTime),
+                    progress: (audio?.currentTime / audio?.duration) * 100,
                   });
+                  moveDragger();
                 }}
                 // onPlay={() => {
                 //   console.log("play");
@@ -157,13 +222,6 @@ export default function PlayingNowBar() {
                 // onPause={() => {
                 //   console.log("pause");
                 // }}
-                onListen={() => {
-                  setTime({
-                    ...time,
-                    currentDuration: convertDuration(audio?.currentTime),
-                    progress: (audio?.currentTime / audio?.duration) * 100,
-                  });
-                }}
                 // autoPlay
                 // controls
               />

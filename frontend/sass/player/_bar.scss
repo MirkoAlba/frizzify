@@ -45,16 +45,17 @@
         .dragger {
           position: absolute;
           top: -90%;
-          left: var(--progress);
           width: rem(12px);
           height: rem(12px);
           border-radius: 50%;
           background-color: $white;
           z-index: 2;
+          // left: var(--progress);
         }
       }
 
       .playback-bar {
+        gap: rem(10px);
         &__time {
           font-size: rem(12px);
           opacity: 0.8;
@@ -79,6 +80,10 @@
       }
 
       .btn- {
+        &:focus-visible {
+          outline: unset;
+          box-shadow: unset;
+        }
         &play {
           width: rem(35px);
           height: rem(35px);
