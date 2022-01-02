@@ -123,7 +123,7 @@ export default function PlayingNowBar() {
 
     return (
       <div className="player-main__bar bg-bar">
-        <Row className="h-100 g-0 px-4">
+        <Row className="h-100 g-0 px-0 px-xl-4">
           <Col
             style={{ border: "2px solid red" }}
             xs={3}
@@ -228,7 +228,7 @@ export default function PlayingNowBar() {
             </div>
           </Col>
 
-          <Col style={{ border: "2px solid yellow" }} xs={3} className="">
+          <Col style={{ border: "2px solid yellow" }} xs={3}>
             right
           </Col>
         </Row>

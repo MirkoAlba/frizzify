@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, Fragment } from "react";
 import { useLoaded } from "../../hooks/use-loaded";
 
 import { useStoreActions, useStoreState } from "easy-peasy";
@@ -35,6 +35,7 @@ export default function LeftNav() {
   const [isResizing, setIsResizing] = useState(false);
 
   const startResizing = useCallback(() => {
+    console.log("start");
     setIsResizing(true);
   }, []);
 
@@ -73,54 +74,58 @@ export default function LeftNav() {
 
   return (
     mounted && (
-      <div
-        ref={sidebarRef}
-        className="player-main__nav bg-nav"
-        style={{
-          width: sidebarWidth,
-          minWidth: sidebarMinWidth,
-          maxWidth: sidebarMaxWidth,
-        }}
-        onMouseDown={(e) => e.preventDefault()}
-      >
-        <div className="player-main__nav--content">
-          <h2 className="pt-3 px-4 text-white">Frizzify</h2>
-          <ul className="menu px-2 m-0">
-            <li className={isHome ? "active" : ""}>
-              <Link href="/">
-                <a>
-                  {isHome ? <HomeFill /> : <Home />}
-                  Home
-                </a>
-              </Link>
-            </li>
-            <li className={isSearch ? "active" : ""}>
-              <Link href="/search">
-                <a>
-                  {isSearch ? <SearchFill /> : <Search />}
-                  Cerca
-                </a>
-              </Link>
-            </li>
-            <li className={isLibrary ? "active" : ""}>
-              <Link href="/library">
-                <a>
-                  {isLibrary ? (
-                    <LibraryFill className="rotate-270" />
-                  ) : (
-                    <Library className="rotate-270" />
-                  )}
-                  Libreria
-                </a>
-              </Link>
-            </li>
-          </ul>
-        </div>
+      <Fragment>
+        <div className="player-main__nav--mobile bg-nav">ciao</div>
+
         <div
-          className="player-main__nav--resizer"
-          onMouseDown={startResizing}
-        />
-      </div>
+          ref={sidebarRef}
+          className="player-main__nav bg-nav d-none d-xl-block"
+          style={{
+            width: sidebarWidth,
+            minWidth: sidebarMinWidth,
+            maxWidth: sidebarMaxWidth,
+          }}
+          onMouseDown={(e) => e.preventDefault()}
+        >
+          <div className="player-main__nav--content">
+            <h2 className="pt-3 px-4 text-white">Frizzify</h2>
+            <ul className="menu px-2 m-0">
+              <li className={isHome ? "active" : ""}>
+                <Link href="/">
+                  <a>
+                    {isHome ? <HomeFill /> : <Home />}
+                    Home
+                  </a>
+                </Link>
+              </li>
+              <li className={isSearch ? "active" : ""}>
+                <Link href="/search">
+                  <a>
+                    {isSearch ? <SearchFill /> : <Search />}
+                    Cerca
+                  </a>
+                </Link>
+              </li>
+              <li className={isLibrary ? "active" : ""}>
+                <Link href="/library">
+                  <a>
+                    {isLibrary ? (
+                      <LibraryFill className="rotate-270" />
+                    ) : (
+                      <Library className="rotate-270" />
+                    )}
+                    Libreria
+                  </a>
+                </Link>
+              </li>
+            </ul>
+          </div>
+          <div
+            className="player-main__nav--resizer"
+            onMouseDown={startResizing}
+          />
+        </div>
+      </Fragment>
     )
   );
 }

@@ -57,5 +57,16 @@
         }
       }
     }
+
+    &--mobile {
+      border: 2px solid red;
+      width: 100vw;
+    }
+
+    // @include media-breakpoint-down(xl) {
+    //   width: 100% !important;
+    //   min-width: unset !important;
+    //   max-width: unset !important;
+    // }
   }
 }
