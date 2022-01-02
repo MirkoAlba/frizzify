@@ -59,7 +59,7 @@ export default function PlayingNowBar() {
 
   const draggerRef = useRef();
   const [draggerPosition, setDraggerPosition] = useState({
-    x: storeState.user.queue.currentSong?.draggerPosition.x
+    x: storeState.user.queue.currentSong?.draggerPosition?.x
       ? storeState.user.queue.currentSong.draggerPosition.x
       : 0,
     y: 0,

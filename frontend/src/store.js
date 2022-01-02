@@ -32,7 +32,8 @@ export const store = createStore(
 
     // set current song in queue
     setCurrentSongInfo: action((state, payload) => {
-      state.user.queue.currentSong = payload ? payload : {};
+      state.user.queue.currentSong =
+        Object.keys(payload).length > 0 ? payload : {};
     }),
   })
 );
