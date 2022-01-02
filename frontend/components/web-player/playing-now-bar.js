@@ -173,9 +173,9 @@ export default function PlayingNowBar() {
                     axis="x"
                     bounds="parent"
                     nodeRef={draggerRef}
-                    onDrag={() => {
-                      handleDrag();
-                    }}
+                    onStart={() => togglePlaying(audio)}
+                    onStop={() => togglePlaying(audio)}
+                    onDrag={() => handleDrag()}
                     position={draggerPosition}
                   >
                     <div ref={draggerRef} className="dragger"></div>
