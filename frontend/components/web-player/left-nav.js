@@ -35,7 +35,6 @@ export default function LeftNav() {
   const [isResizing, setIsResizing] = useState(false);
 
   const startResizing = useCallback(() => {
-    console.log("start");
     setIsResizing(true);
   }, []);
 

@@ -30,29 +30,36 @@ export async function validLoginRegister(operation, input, callback) {
 }
 
 export function formatSongs(songs) {
-  return songs.map((song) => {
+  return songs.map((song, index) => {
     return {
+      index,
       id: song.id,
       name: song.attributes.name,
       description: song.attributes.description,
       file: {
         url: song.attributes.file.data.attributes.url,
       },
+      cover: {
+        url: song.attributes.cover.data?.attributes.url,
+      },
       album: {
         id: song.attributes.album.data.id,
         name: song.attributes.album.data.attributes.name,
         description: song.attributes.album.data.attributes.description,
         genre: song.attributes.album.data.attributes.genre,
-        coverUrl:
-          song.attributes.album.data.attributes.cover.data.attributes.url,
-      },
-      artist: {
-        id: song.attributes.album.data.attributes.artist.data.id,
-        artname:
-          song.attributes.album.data.attributes.artist.data.attributes.artname,
-        description:
-          song.attributes.album.data.attributes.artist.data.attributes
-            .description,
+        releaseDate: song.attributes.album.data.attributes.releaseDate,
+        cover: {
+          url: song.attributes.album.data.attributes.cover.data.attributes.url,
+        },
+        artist: {
+          id: song.attributes.album.data.attributes.artist.data.id,
+          artname:
+            song.attributes.album.data.attributes.artist.data.attributes
+              .artname,
+          description:
+            song.attributes.album.data.attributes.artist.data.attributes
+              .description,
+        },
       },
     };
   });
@@ -60,6 +67,7 @@ export function formatSongs(songs) {
 
 export function formatSong(song) {
   return {
+    index: song.index,
     id: song.data.id,
     name: song.data.attributes.name,
     description: song.data.attributes.description,

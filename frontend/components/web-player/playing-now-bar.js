@@ -3,9 +3,9 @@ import { Row, Col } from "react-bootstrap";
 import { useState, useRef, useEffect } from "react";
 
 import { useQuery } from "@apollo/client";
-import { SONG } from "../../graphql/queries/index";
+import { SONGS } from "../../graphql/queries/index";
 
-import { formatSong, convertDuration } from "../../utils/index";
+import { formatSong, convertDuration, formatSongs } from "../../utils/index";
 
 import { uri as apiUri } from "../../apollo/api";
 
@@ -26,16 +26,17 @@ import Heart from "../../assets/bar/heart.svg";
 import HeartFill from "../../assets/bar/heart-fill.svg";
 import Play from "../../assets/bar/play-button.svg";
 import Pause from "../../assets/bar/pause-button.svg";
+import Rewind from "../../assets/bar/rewind.svg";
 
 export default function PlayingNowBar() {
   // TODO: check length of songName and artist and add horizontal scrolling text animation (22 chars max length)
   // const songNameRef = useRef(null);
   // useEffect(() => {
   //   if (songNameRef.current) {
-  //     console.log(songNameRef.current);
   //   }
   // });
 
+  // responsive
   const { width } = useWindowDimensions();
   const isMobile = width < breakpoint.xl;
   const imageDimensions = isMobile
@@ -48,16 +49,24 @@ export default function PlayingNowBar() {
     (actions) => actions.setCurrentSongInfo
   );
 
-  const [song, setSong] = useState();
-  const { loading } = useQuery(SONG, {
-    onCompleted: (d) => setSong(formatSong(d.song)),
-  });
-
+  // handle playing
   const [isPlaying, setIsPlaying] = useState(false);
   const togglePlaying = (audio) => {
     setIsPlaying(!isPlaying);
     isPlaying ? audio?.pause() : audio?.play();
   };
+
+  // fetch data
+  const [songs, setSongs] = useState();
+  const [currentSong, setCurrentSong] = useState();
+
+  const { loading } = useQuery(SONGS, {
+    onCompleted: (d) => {
+      const songs = formatSongs(d.songs.data);
+      setSongs(songs);
+      setCurrentSong(songs[0]);
+    },
+  });
 
   const [audio, setAudio] = useState(); // audio object
   const [time, setTime] = useState(
@@ -114,6 +123,32 @@ export default function PlayingNowBar() {
     setCurrentSongInfo({ time, draggerPosition });
   };
 
+  const nextSong = (currentSongIndex) => {
+    const index =
+      currentSongIndex + 1 > songs.length - 1 ? 0 : currentSongIndex + 1;
+    setCurrentSong(songs[index]);
+    setTime({
+      duration: convertDuration(audio?.duration),
+      currentDuration: "0:00",
+      currentRawDuration: 0,
+      progress: 0,
+    });
+    audio.currentTime = 0;
+    setDraggerPosition({ x: 0, y: 0 });
+  };
+
+  const prevSong = (currentSongIndex) => {
+    setCurrentSong(songs[currentSongIndex - 1]);
+    setTime({
+      duration: convertDuration(audio?.duration),
+      currentDuration: "0:00",
+      currentRawDuration: 0,
+      progress: 0,
+    });
+    audio.currentTime = 0;
+    setDraggerPosition({ x: 0, y: 0 });
+  };
+
   // handle dragger position on window resize
   useEffect(() => {
     window.addEventListener("resize", moveDragger);
@@ -122,17 +157,19 @@ export default function PlayingNowBar() {
     };
   }, []);
 
-  if (song && !loading) {
-    // console.log(song);
-    const coverUrl = song.cover.url ? song.cover.url : song.album.cover.url;
-    const songName = song.name,
-      artist = song.album.artist.artname,
-      songFile = song.file.url;
+  if (currentSong && !loading) {
+    const coverUrl = currentSong.cover.url
+      ? currentSong.cover.url
+      : currentSong.album.cover.url;
+    const currentSongName = currentSong.name,
+      artist = currentSong.album.artist.artname,
+      currentSongFile = currentSong.file.url,
+      songIndex = currentSong.index;
 
     return (
       <div className="player-main__bar bg-bar">
         <Row className="h-100 g-0 px-2 px-xl-4">
-          <Col xs={8} xl={3} className="d-flex align-items-center">
+          <Col xs={7} xl={3} className="d-flex align-items-center">
             <div className="position-relative d-flex">
               <Image
                 src={apiUri + coverUrl}
@@ -142,7 +179,7 @@ export default function PlayingNowBar() {
             </div>
             <div className="song-details ms-3">
               {/* TODO: add links to the current album and artist page */}
-              <p className="text-white song-details__name">{songName}</p>
+              <p className="text-white song-details__name">{currentSongName}</p>
               <p className="text-white song-details__artist">{artist}</p>
             </div>
             <button className="border-0 bg-unset ms-3">
@@ -150,18 +187,34 @@ export default function PlayingNowBar() {
             </button>
           </Col>
 
-          <Col xs={4} xl={6}>
-            <div className="wrapper-player d-flex flex-column align-items-center justify-content-center">
-              <button
-                onClick={() => togglePlaying(audio)}
-                className="btn- bg-unset border-0"
-              >
-                {!isPlaying ? (
-                  <Play className="btn-play" />
-                ) : (
-                  <Pause className="btn-pause" />
-                )}
-              </button>
+          <Col xs={5} xl={6}>
+            <div className="wrapper-player d-flex flex-column align-items-end align-items-xl-center justify-content-center">
+              <div className="d-flex">
+                <button
+                  onClick={() => prevSong(songIndex)}
+                  className="btn- bg-unset border-0"
+                >
+                  <Rewind className="btn-prev" />
+                </button>
+
+                <button
+                  onClick={() => togglePlaying(audio)}
+                  className="btn- bg-unset border-0"
+                >
+                  {!isPlaying ? (
+                    <Play className="btn-play" />
+                  ) : (
+                    <Pause className="btn-pause" />
+                  )}
+                </button>
+
+                <button
+                  onClick={() => nextSong(songIndex)}
+                  className="btn- bg-unset border-0"
+                >
+                  <Rewind className="btn-next" />
+                </button>
+              </div>
 
               {!isMobile && (
                 <div className="playback-bar w-100 d-flex justify-content-center align-items-center pt-1">
@@ -197,7 +250,9 @@ export default function PlayingNowBar() {
                     </Draggable>
                   </div>
 
-                  <p className="playback-bar__time me-2">{time.duration}</p>
+                  <p className="playback-bar__time me-2">
+                    {convertDuration(audio?.duration)}
+                  </p>
                 </div>
               )}
 
@@ -205,7 +260,7 @@ export default function PlayingNowBar() {
                 ref={(e) => {
                   setAudio(e?.audioEl.current);
                 }}
-                src={apiUri + songFile}
+                src={apiUri + currentSongFile}
                 listenInterval={500}
                 onLoadedMetadata={() => {
                   setTime(
@@ -231,6 +286,28 @@ export default function PlayingNowBar() {
                     progress: (audio?.currentTime / audio?.duration) * 100,
                   });
                   moveDragger();
+                }}
+                // quando ha scaricato abbastanza per poter partire
+                onCanPlay={() => {
+                  setCurrentSongInfo({
+                    time: {
+                      duration: convertDuration(audio?.duration),
+                      currentDuration: "0:00",
+                      currentRawDuration: 0,
+                      progress: 0,
+                    },
+                    draggerPosition: { x: 0, y: 0 },
+                  });
+                }}
+                // traccia finita
+                onEnded={() => nextSong(songIndex)}
+                // unload src file
+                onAbort={() => {
+                  if (audio.paused && isPlaying) {
+                    audio.play();
+                  } else if (audio.paused && !isPlaying) {
+                    audio.pause();
+                  }
                 }}
               />
             </div>

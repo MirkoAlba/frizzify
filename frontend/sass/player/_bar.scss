@@ -111,16 +111,28 @@
           outline: unset;
           box-shadow: unset;
         }
+
         &play {
           width: rem(35px);
           height: rem(35px);
-          fill: white;
+          fill: $white;
         }
 
         &pause {
           width: rem(35px);
           height: rem(35px);
-          fill: white;
+          fill: $white;
+        }
+
+        &next {
+          fill: $white;
+          width: rem(25px);
+          transform: rotate(180deg);
+        }
+
+        &prev {
+          fill: $white;
+          width: rem(25px);
         }
       }
     }

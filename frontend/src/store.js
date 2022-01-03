@@ -13,7 +13,7 @@ export const store = createStore(
       queue: {},
     },
 
-    // on login set current user data in store
+    // on login set current user data
     setUserId: action((state, payload) => {
       state.user.id = payload.id;
       state.user.username = payload.username;
@@ -35,5 +35,13 @@ export const store = createStore(
       state.user.queue.currentSong =
         Object.keys(payload).length > 0 ? payload : {};
     }),
+
+    // set songs in queue
+    setSongsInQueue: action((state, payload) => {
+      state.user.queue.songs = payload.length > 0 ? payload : [];
+    }),
+
+    // save queue in db
+    saveQueue: thunk(async (actions, payload) => {}),
   })
 );
