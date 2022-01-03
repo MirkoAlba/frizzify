@@ -21,7 +21,7 @@ export const APOLLO_STATE_PROP_NAME = "__APOLLO_STATE__";
 
 let apolloClient;
 
-function createApolloClient() {
+export function createApolloClient() {
   //link per vedere loggati meglio gli errori
   const errorLink = onError(({ graphQLErrors, networkError }) => {
     if (graphQLErrors)

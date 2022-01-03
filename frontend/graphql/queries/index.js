@@ -171,3 +171,84 @@ export const ME = gql`
     }
   }
 `;
+
+export const QUEUES = gql`
+  query {
+    queues {
+      data {
+        id
+        attributes {
+          users_permissions_user {
+            data {
+              id
+              attributes {
+                username
+                email
+              }
+            }
+          }
+          songs {
+            data {
+              id
+              attributes {
+                name
+                description
+                file {
+                  data {
+                    attributes {
+                      url
+                    }
+                  }
+                }
+                album {
+                  data {
+                    id
+                    attributes {
+                      name
+                      genre
+                      releaseDate
+                      cover {
+                        data {
+                          attributes {
+                            url
+                          }
+                        }
+                      }
+                      artist {
+                        data {
+                          id
+                          attributes {
+                            artname
+                            description
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const QUEUE = gql`
+  query {
+    queue(id: 2) {
+      data {
+        attributes {
+          songs {
+            data {
+              attributes {
+                name
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;

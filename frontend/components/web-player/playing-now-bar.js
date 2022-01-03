@@ -83,11 +83,6 @@ export default function PlayingNowBar() {
     y: 0,
   });
 
-  // init store
-  useEffect(() => {
-    setCurrentSongInfo({ time, draggerPosition });
-  }, []);
-
   const handleDrag = () => {
     const rawDuration = Math.ceil(audio?.duration); // durata in secondi
     const barWidth = draggerRef.current.parentElement.offsetWidth; // larghezza barra in px
@@ -113,14 +108,14 @@ export default function PlayingNowBar() {
     audio.currentTime = Math.ceil(finalDuration);
     setDraggerPosition({ x: parseInt(draggerCurrentPosition), y: 0 });
 
-    setCurrentSongInfo({ time, draggerPosition });
+    setCurrentSongInfo({ time, draggerPosition, index: currentSong?.index });
   };
 
   const moveDragger = () => {
     const barWidth = draggerRef?.current?.parentElement?.offsetWidth; // larghezza barra in px
     const draggerXpos = (time.progress * barWidth) / 100; // posizione dragger in px
     setDraggerPosition({ x: Math.ceil(draggerXpos), y: 0 });
-    setCurrentSongInfo({ time, draggerPosition });
+    setCurrentSongInfo({ time, draggerPosition, index: currentSong?.index });
   };
 
   const nextSong = (currentSongIndex) => {
@@ -135,6 +130,11 @@ export default function PlayingNowBar() {
     });
     audio.currentTime = 0;
     setDraggerPosition({ x: 0, y: 0 });
+    setCurrentSongInfo({
+      time,
+      draggerPosition,
+      index: currentSong.index,
+    });
   };
 
   const prevSong = (currentSongIndex) => {
@@ -147,6 +147,11 @@ export default function PlayingNowBar() {
     });
     audio.currentTime = 0;
     setDraggerPosition({ x: 0, y: 0 });
+    setCurrentSongInfo({
+      time,
+      draggerPosition,
+      index: currentSong.index,
+    });
   };
 
   // handle dragger position on window resize
@@ -297,6 +302,7 @@ export default function PlayingNowBar() {
                       progress: 0,
                     },
                     draggerPosition: { x: 0, y: 0 },
+                    index: currentSong.index,
                   });
                 }}
                 // traccia finita
