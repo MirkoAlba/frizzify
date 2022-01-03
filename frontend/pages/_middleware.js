@@ -13,7 +13,7 @@ export async function middleware(req, ev) {
   //   return res.json();
   // });
   // const isLoggedIn = data.error ? false : true;
-  // if (pathname !== "/") {
+  // if (!isLoggedIn && pathname !== "/") {
   //   return NextResponse.redirect("/");
   // }
 }

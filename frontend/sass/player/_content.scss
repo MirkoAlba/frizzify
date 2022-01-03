@@ -15,11 +15,10 @@
   }
 
   @include media-breakpoint-down(xl) {
-    border: 2px solid gray;
     grid-template-columns: unset;
     grid-template-rows:
       1fr
-      $bar-height;
+      $bar-height-mobile;
     grid-template-areas:
       "content content content"
       "bar bar bar"

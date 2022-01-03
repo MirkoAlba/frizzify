@@ -21,20 +21,26 @@
       .menu {
         list-style: none;
 
-        li {
+        &--item {
           padding-left: 1rem;
           padding-right: 1rem;
 
           &.active {
             background-color: #282828;
             border-radius: rem(5px);
+
+            .player-main__nav--mobile & {
+              background-color: unset;
+              border-radius: unset;
+            }
+
             a {
               opacity: 1;
             }
           }
         }
 
-        li a {
+        &--item a {
           text-decoration: none;
           color: $white;
           opacity: 0.8;
@@ -59,8 +65,8 @@
     }
 
     &--mobile {
-      border: 2px solid red;
       width: 100vw;
+      height: rem(40px);
     }
 
     // @include media-breakpoint-down(xl) {

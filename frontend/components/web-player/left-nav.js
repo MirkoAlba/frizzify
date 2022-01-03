@@ -75,7 +75,31 @@ export default function LeftNav() {
   return (
     mounted && (
       <Fragment>
-        <div className="player-main__nav--mobile bg-nav">ciao</div>
+        <div className="player-main__nav--mobile bg-nav d-xl-none">
+          <div className="player-main__nav--content d-flex align-items-center justify-content-around">
+            <div className={isHome ? "active menu--item" : "menu--item"}>
+              <Link href="/">
+                <a>{isHome ? <HomeFill /> : <Home />}</a>
+              </Link>
+            </div>
+            <div className={isSearch ? "active menu--item" : "menu--item"}>
+              <Link href="/search">
+                <a>{isSearch ? <SearchFill /> : <Search />}</a>
+              </Link>
+            </div>
+            <div className={isLibrary ? "active menu--item" : "menu--item"}>
+              <Link href="/library">
+                <a>
+                  {isLibrary ? (
+                    <LibraryFill className="rotate-270" />
+                  ) : (
+                    <Library className="rotate-270" />
+                  )}
+                </a>
+              </Link>
+            </div>
+          </div>
+        </div>
 
         <div
           ref={sidebarRef}
@@ -90,7 +114,7 @@ export default function LeftNav() {
           <div className="player-main__nav--content">
             <h2 className="pt-3 px-4 text-white">Frizzify</h2>
             <ul className="menu px-2 m-0">
-              <li className={isHome ? "active" : ""}>
+              <li className={isHome ? "active menu--item" : "menu--item"}>
                 <Link href="/">
                   <a>
                     {isHome ? <HomeFill /> : <Home />}
@@ -98,7 +122,7 @@ export default function LeftNav() {
                   </a>
                 </Link>
               </li>
-              <li className={isSearch ? "active" : ""}>
+              <li className={isSearch ? "active menu--item" : "menu--item"}>
                 <Link href="/search">
                   <a>
                     {isSearch ? <SearchFill /> : <Search />}
@@ -106,7 +130,7 @@ export default function LeftNav() {
                   </a>
                 </Link>
               </li>
-              <li className={isLibrary ? "active" : ""}>
+              <li className={isLibrary ? "active menu--item" : "menu--item"}>
                 <Link href="/library">
                   <a>
                     {isLibrary ? (

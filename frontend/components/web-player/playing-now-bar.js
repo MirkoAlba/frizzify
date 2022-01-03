@@ -18,6 +18,9 @@ import { useStoreActions, useStoreState } from "easy-peasy";
 import ReactAudioPlayer from "react-audio-player";
 import Draggable from "react-draggable";
 
+import useWindowDimensions from "../../hooks/use-viewport-dimensions";
+import { breakpoint } from "../../utils/index";
+
 // svgs
 import Heart from "../../assets/bar/heart.svg";
 import HeartFill from "../../assets/bar/heart-fill.svg";
@@ -32,6 +35,12 @@ export default function PlayingNowBar() {
   //     console.log(songNameRef.current);
   //   }
   // });
+
+  const { width } = useWindowDimensions();
+  const isMobile = width < breakpoint.xl;
+  const imageDimensions = isMobile
+    ? { width: 35, height: 35 }
+    : { width: 55, height: 55 };
 
   // store
   const storeState = useStoreState((state) => state);
@@ -99,10 +108,9 @@ export default function PlayingNowBar() {
   };
 
   const moveDragger = () => {
-    const barWidth = draggerRef.current.parentElement.offsetWidth; // larghezza barra in px
+    const barWidth = draggerRef?.current?.parentElement?.offsetWidth; // larghezza barra in px
     const draggerXpos = (time.progress * barWidth) / 100; // posizione dragger in px
     setDraggerPosition({ x: Math.ceil(draggerXpos), y: 0 });
-
     setCurrentSongInfo({ time, draggerPosition });
   };
 
@@ -112,7 +120,7 @@ export default function PlayingNowBar() {
     return () => {
       window.removeEventListener("resize", moveDragger);
     };
-  });
+  }, []);
 
   if (song && !loading) {
     // console.log(song);
@@ -123,14 +131,14 @@ export default function PlayingNowBar() {
 
     return (
       <div className="player-main__bar bg-bar">
-        <Row className="h-100 g-0 px-0 px-xl-4">
-          <Col
-            style={{ border: "2px solid red" }}
-            xs={3}
-            className="d-flex align-items-center"
-          >
-            <div className="position-relative">
-              <Image src={apiUri + coverUrl} width={55} height={55} />
+        <Row className="h-100 g-0 px-2 px-xl-4">
+          <Col xs={8} xl={3} className="d-flex align-items-center">
+            <div className="position-relative d-flex">
+              <Image
+                src={apiUri + coverUrl}
+                width={imageDimensions.width}
+                height={imageDimensions.height}
+              />
             </div>
             <div className="song-details ms-3">
               {/* TODO: add links to the current album and artist page */}
@@ -142,7 +150,7 @@ export default function PlayingNowBar() {
             </button>
           </Col>
 
-          <Col style={{ border: "2px solid green" }} xs={6}>
+          <Col xs={4} xl={6}>
             <div className="wrapper-player d-flex flex-column align-items-center justify-content-center">
               <button
                 onClick={() => togglePlaying(audio)}
@@ -155,35 +163,43 @@ export default function PlayingNowBar() {
                 )}
               </button>
 
-              <div className="playback-bar w-100 d-flex justify-content-center align-items-center pt-1">
-                <p className="playback-bar__time ms-2">
-                  {time.currentDuration}
-                </p>
+              {!isMobile && (
+                <div className="playback-bar w-100 d-flex justify-content-center align-items-center pt-1">
+                  <p className="playback-bar__time ms-2">
+                    {time.currentDuration}
+                  </p>
 
-                <div className="wrapper-playback-bar">
-                  <div className="playback-bar__progress">
-                    <div
-                      style={{
-                        transform: `translateX(calc(-100% + ${time?.progress}%))`,
+                  <div className="wrapper-playback-bar">
+                    <div className="playback-bar__progress">
+                      <div
+                        style={{
+                          transform: `translateX(calc(-100% + ${time?.progress}%))`,
+                        }}
+                        className="playback-bar__progress--current-time"
+                      ></div>
+                    </div>
+                    <Draggable
+                      axis="x"
+                      bounds="parent"
+                      nodeRef={draggerRef}
+                      onStart={() => {
+                        setIsPlaying(false);
+                        audio.pause();
                       }}
-                      className="playback-bar__progress--current-time"
-                    ></div>
+                      onStop={() => {
+                        setIsPlaying(true);
+                        audio.play();
+                      }}
+                      onDrag={() => handleDrag()}
+                      position={draggerPosition}
+                    >
+                      <div ref={draggerRef} className="dragger"></div>
+                    </Draggable>
                   </div>
-                  <Draggable
-                    axis="x"
-                    bounds="parent"
-                    nodeRef={draggerRef}
-                    onStart={() => togglePlaying(audio)}
-                    onStop={() => togglePlaying(audio)}
-                    onDrag={() => handleDrag()}
-                    position={draggerPosition}
-                  >
-                    <div ref={draggerRef} className="dragger"></div>
-                  </Draggable>
-                </div>
 
-                <p className="playback-bar__time me-2">{time.duration}</p>
-              </div>
+                  <p className="playback-bar__time me-2">{time.duration}</p>
+                </div>
+              )}
 
               <ReactAudioPlayer
                 ref={(e) => {
@@ -216,22 +232,28 @@ export default function PlayingNowBar() {
                   });
                   moveDragger();
                 }}
-                // onPlay={() => {
-                //   console.log("play");
-                // }}
-                // onPause={() => {
-                //   console.log("pause");
-                // }}
-                // autoPlay
-                // controls
               />
             </div>
           </Col>
 
-          <Col style={{ border: "2px solid yellow" }} xs={3}>
+          <Col xs={3} className="d-none d-xl-block">
             right
           </Col>
         </Row>
+        {isMobile && (
+          <Row className="g-0">
+            <div className="playback-bar--mobile">
+              <div className="playback-bar--mobile__progress">
+                <div
+                  style={{
+                    transform: `translateX(calc(-100% + ${time?.progress}%))`,
+                  }}
+                  className="playback-bar--mobile__progress__current-time"
+                ></div>
+              </div>
+            </div>
+          </Row>
+        )}
       </div>
     );
   } else {
