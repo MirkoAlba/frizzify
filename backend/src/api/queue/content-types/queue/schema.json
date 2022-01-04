@@ -4,7 +4,8 @@
   "info": {
     "singularName": "queue",
     "pluralName": "queues",
-    "displayName": "queue"
+    "displayName": "queue",
+    "description": ""
   },
   "options": {
     "draftAndPublish": false
@@ -21,6 +22,9 @@
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::song.song"
+    },
+    "currentSongData": {
+      "type": "json"
     }
   }
 }

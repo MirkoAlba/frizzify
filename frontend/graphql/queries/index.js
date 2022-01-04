@@ -200,13 +200,18 @@ export const QUEUES = gql`
                     }
                   }
                 }
+                cover {
+                  data {
+                    attributes {
+                      url
+                    }
+                  }
+                }
                 album {
                   data {
                     id
                     attributes {
                       name
-                      genre
-                      releaseDate
                       cover {
                         data {
                           attributes {
@@ -214,6 +219,7 @@ export const QUEUES = gql`
                           }
                         }
                       }
+                      genre
                       artist {
                         data {
                           id
@@ -223,6 +229,7 @@ export const QUEUES = gql`
                           }
                         }
                       }
+                      description
                     }
                   }
                 }
@@ -235,19 +242,12 @@ export const QUEUES = gql`
   }
 `;
 
-export const QUEUE = gql`
-  query {
-    queue(id: 2) {
+// filters: { users_permissions_user: { id: { contains: 29 } } }
+export const USER_QUEUES = gql`
+  query userQueues($filters: QueueFiltersInput) {
+    queues(filters: $filters) {
       data {
-        attributes {
-          songs {
-            data {
-              attributes {
-                name
-              }
-            }
-          }
-        }
+        id
       }
     }
   }

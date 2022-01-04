@@ -91,7 +91,7 @@
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::queue.queue",
-      "inversedBy": "users_permissions_user"
+      "mappedBy": "users_permissions_user"
     }
   }
 }

@@ -5,9 +5,6 @@ import Layout from "../components/layout/index";
 import { ApolloProvider } from "@apollo/client";
 import { useApollo } from "../apollo/apollo-client";
 
-import { QUEUES, QUEUE } from "../graphql/queries";
-import { queryClient } from "../apollo/utils";
-
 import cookie from "cookie";
 import { getAccessToken, setAccessToken } from "../apollo/access-token";
 
@@ -16,11 +13,9 @@ import { uri } from "../apollo/api";
 import { StoreProvider } from "easy-peasy";
 import { store } from "../src/store";
 
-function MyApp({ Component, pageProps, token, isLoggedIn, queues }) {
+function MyApp({ Component, pageProps, token, isLoggedIn }) {
   const client = useApollo(pageProps);
   setAccessToken(token);
-
-  // console.log(queues);
 
   return (
     <StoreProvider store={store}>
@@ -57,17 +52,11 @@ MyApp.getInitialProps = async (appContext) => {
   });
   const isLoggedIn = data.error ? false : true;
 
-  var queues;
-  if (isLoggedIn) {
-    queues = await queryClient({ query: QUEUES });
-  }
-
   // ritorno il token per settarlo
   return {
     ...appProps,
     token,
     isLoggedIn, // se non è loggato ritorno unauthorized
-    queues,
   };
 };
 

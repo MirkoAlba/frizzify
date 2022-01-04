@@ -1,7 +1,13 @@
 import { initializeApollo } from "./apollo-client";
 
-//queryObject deve essere {query: GQL_QUERY}
+const client = initializeApollo();
+
+// queryObject deve essere { query: GQL_QUERY, variables: {...} }
+
 export async function queryClient(queryObject) {
-  const client = initializeApollo();
   return await client.query(queryObject);
+}
+
+export async function mutateClient(queryObject) {
+  return await client.mutate(queryObject);
 }

@@ -3165,6 +3165,7 @@
                                                           }
                                                         }
                                                       },
+                                                      "currentSongData": {},
                                                       "createdAt": {
                                                         "type": "string",
                                                         "format": "date-time"
@@ -3281,6 +3282,7 @@
                                   }
                                 }
                               },
+                              "currentSongData": {},
                               "createdAt": {
                                 "type": "string",
                                 "format": "date-time"
@@ -6751,6 +6753,7 @@
                                                         }
                                                       }
                                                     },
+                                                    "currentSongData": {},
                                                     "createdAt": {
                                                       "type": "string",
                                                       "format": "date-time"
@@ -6867,6 +6870,7 @@
                                 }
                               }
                             },
+                            "currentSongData": {},
                             "createdAt": {
                               "type": "string",
                               "format": "date-time"
@@ -7105,6 +7109,7 @@
                           "example": "string or id"
                         }
                       },
+                      "currentSongData": {},
                       "createdAt": {
                         "type": "string",
                         "format": "date-time"
@@ -10307,6 +10312,7 @@
                                                         }
                                                       }
                                                     },
+                                                    "currentSongData": {},
                                                     "createdAt": {
                                                       "type": "string",
                                                       "format": "date-time"
@@ -10423,6 +10429,7 @@
                                 }
                               }
                             },
+                            "currentSongData": {},
                             "createdAt": {
                               "type": "string",
                               "format": "date-time"
@@ -13802,6 +13809,7 @@
                                                         }
                                                       }
                                                     },
+                                                    "currentSongData": {},
                                                     "createdAt": {
                                                       "type": "string",
                                                       "format": "date-time"
@@ -13918,6 +13926,7 @@
                                 }
                               }
                             },
+                            "currentSongData": {},
                             "createdAt": {
                               "type": "string",
                               "format": "date-time"
@@ -14167,6 +14176,7 @@
                           "example": "string or id"
                         }
                       },
+                      "currentSongData": {},
                       "createdAt": {
                         "type": "string",
                         "format": "date-time"
