@@ -6,6 +6,7 @@ export const SONG = gql`
       data {
         id
         attributes {
+          explicit
           name
           description
           file {
@@ -41,6 +42,7 @@ export const SONG = gql`
                   data {
                     id
                     attributes {
+                      uid
                       artname
                       description
                     }
@@ -61,6 +63,7 @@ export const SONGS = gql`
       data {
         id
         attributes {
+          explicit
           name
           description
           file {
@@ -94,6 +97,7 @@ export const SONGS = gql`
                   data {
                     id
                     attributes {
+                      uid
                       artname
                       description
                     }
@@ -191,6 +195,7 @@ export const QUEUES = gql`
             data {
               id
               attributes {
+                explicit
                 name
                 description
                 file {
@@ -224,6 +229,7 @@ export const QUEUES = gql`
                         data {
                           id
                           attributes {
+                            uid
                             artname
                             description
                           }
@@ -248,6 +254,124 @@ export const USER_QUEUES = gql`
     queues(filters: $filters) {
       data {
         id
+      }
+    }
+  }
+`;
+
+export const GET_ARTISTS = gql`
+  query {
+    artists {
+      data {
+        id
+        attributes {
+          uid
+          artname
+          picture {
+            data {
+              attributes {
+                url
+              }
+            }
+          }
+          description
+          albums {
+            data {
+              id
+              attributes {
+                releaseDate
+                description
+                songs {
+                  data {
+                    id
+                    attributes {
+                      name
+                      description
+                      file {
+                        data {
+                          attributes {
+                            url
+                          }
+                        }
+                      }
+                      cover {
+                        data {
+                          attributes {
+                            url
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+// { uid: { contains: "the-weeknd" } }
+export const GET_ARTIST_BY_UID = gql`
+  query artistsByUID($filters: ArtistFiltersInput) {
+    artists(filters: $filters) {
+      data {
+        id
+        attributes {
+          artname
+          description
+          uid
+          picture {
+            data {
+              attributes {
+                url
+              }
+            }
+          }
+          albums {
+            data {
+              id
+              attributes {
+                releaseDate
+                genre
+                name
+                cover {
+                  data {
+                    attributes {
+                      url
+                    }
+                  }
+                }
+                songs {
+                  data {
+                    id
+                    attributes {
+                      name
+                      description
+                      cover {
+                        data {
+                          attributes {
+                            url
+                          }
+                        }
+                      }
+                      file {
+                        data {
+                          attributes {
+                            url
+                          }
+                        }
+                      }
+                      explicit
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }
   }

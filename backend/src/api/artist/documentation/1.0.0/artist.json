@@ -1563,6 +1563,9 @@
                                                               }
                                                             }
                                                           },
+                                                          "explicit": {
+                                                            "type": "boolean"
+                                                          },
                                                           "createdAt": {
                                                             "type": "string",
                                                             "format": "date-time"
@@ -2275,6 +2278,9 @@
                                                         "description": {
                                                           "type": "string"
                                                         },
+                                                        "uid": {
+                                                          "type": "string"
+                                                        },
                                                         "createdAt": {
                                                           "type": "string",
                                                           "format": "date-time"
@@ -2384,6 +2390,9 @@
                                 }
                               },
                               "description": {
+                                "type": "string"
+                              },
+                              "uid": {
                                 "type": "string"
                               },
                               "createdAt": {
@@ -4258,6 +4267,9 @@
                                                             }
                                                           }
                                                         },
+                                                        "explicit": {
+                                                          "type": "boolean"
+                                                        },
                                                         "createdAt": {
                                                           "type": "string",
                                                           "format": "date-time"
@@ -4970,6 +4982,9 @@
                                                       "description": {
                                                         "type": "string"
                                                       },
+                                                      "uid": {
+                                                        "type": "string"
+                                                      },
                                                       "createdAt": {
                                                         "type": "string",
                                                         "format": "date-time"
@@ -5079,6 +5094,9 @@
                               }
                             },
                             "description": {
+                              "type": "string"
+                            },
+                            "uid": {
                               "type": "string"
                             },
                             "createdAt": {
@@ -5327,6 +5345,9 @@
                         }
                       },
                       "description": {
+                        "type": "string"
+                      },
+                      "uid": {
                         "type": "string"
                       },
                       "createdAt": {
@@ -6933,6 +6954,9 @@
                                                             }
                                                           }
                                                         },
+                                                        "explicit": {
+                                                          "type": "boolean"
+                                                        },
                                                         "createdAt": {
                                                           "type": "string",
                                                           "format": "date-time"
@@ -7645,6 +7669,9 @@
                                                       "description": {
                                                         "type": "string"
                                                       },
+                                                      "uid": {
+                                                        "type": "string"
+                                                      },
                                                       "createdAt": {
                                                         "type": "string",
                                                         "format": "date-time"
@@ -7754,6 +7781,9 @@
                               }
                             },
                             "description": {
+                              "type": "string"
+                            },
+                            "uid": {
                               "type": "string"
                             },
                             "createdAt": {
@@ -9537,6 +9567,9 @@
                                                             }
                                                           }
                                                         },
+                                                        "explicit": {
+                                                          "type": "boolean"
+                                                        },
                                                         "createdAt": {
                                                           "type": "string",
                                                           "format": "date-time"
@@ -10249,6 +10282,9 @@
                                                       "description": {
                                                         "type": "string"
                                                       },
+                                                      "uid": {
+                                                        "type": "string"
+                                                      },
                                                       "createdAt": {
                                                         "type": "string",
                                                         "format": "date-time"
@@ -10358,6 +10394,9 @@
                               }
                             },
                             "description": {
+                              "type": "string"
+                            },
+                            "uid": {
                               "type": "string"
                             },
                             "createdAt": {
@@ -10617,6 +10656,9 @@
                         }
                       },
                       "description": {
+                        "type": "string"
+                      },
+                      "uid": {
                         "type": "string"
                       },
                       "createdAt": {

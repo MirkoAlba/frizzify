@@ -37,8 +37,10 @@ MyApp.getInitialProps = async (appContext) => {
   if (appContext.ctx.req?.headers.cookie) {
     var c = cookie.parse(appContext.ctx.req.headers.cookie);
     token = c.jid;
+    console.log("server: ", token);
   } else {
     token = getAccessToken();
+    console.log("client: ", token);
   }
 
   // fetcho la api per vedere se lo user corrente è loggato

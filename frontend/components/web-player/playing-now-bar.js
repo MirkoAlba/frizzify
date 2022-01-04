@@ -57,7 +57,7 @@ export default function PlayingNowBar() {
   const setQueueInGlobalState = () => {
     setCurrentQueue({
       currentSong: {
-        currentSongIndex: currentSong.index,
+        currentSongIndex: currentSong?.index,
         draggerPosition,
         time,
       },
@@ -210,7 +210,8 @@ export default function PlayingNowBar() {
       currentSongName = currentSong.name,
       artist = currentSong.album.artist.artname,
       currentSongFile = currentSong.file.url,
-      songIndex = currentSong.index;
+      songIndex = currentSong.index,
+      explicitContent = currentSong.explicit;
 
     return (
       <div className="player-main__bar bg-bar">

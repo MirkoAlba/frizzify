@@ -36,6 +36,7 @@ export function formatSongs(songs) {
       id: song.id,
       name: song.attributes.name,
       description: song.attributes.description,
+      explicit: song.attributes.explicit,
       file: {
         url: song.attributes.file.data.attributes.url,
       },
@@ -71,6 +72,7 @@ export function formatSong(song) {
     id: song.data.id,
     name: song.data.attributes.name,
     description: song.data.attributes.description,
+    explicit: song.data.attributes.explicit,
     file: {
       url: song.data.attributes.file.data.attributes.url,
     },
@@ -99,6 +101,18 @@ export function formatSong(song) {
     },
   };
 }
+
+export const formatArtists = (artists) => {
+  return artists.map((a) => {
+    return {
+      id: a.id,
+      uid: a.attributes.uid,
+      artname: a.attributes.artname,
+      description: a.attributes.description,
+      picture: a.attributes.picture.data.attributes.url,
+    };
+  });
+};
 
 export function convertDuration(time) {
   var mins = Math.floor(time / 60);

@@ -33,6 +33,10 @@
     },
     "description": {
       "type": "richtext"
+    },
+    "uid": {
+      "type": "uid",
+      "targetField": "artname"
     }
   }
 }

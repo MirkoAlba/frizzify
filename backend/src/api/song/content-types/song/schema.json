@@ -43,6 +43,9 @@
       "relation": "manyToOne",
       "target": "api::album.album",
       "inversedBy": "songs"
+    },
+    "explicit": {
+      "type": "boolean"
     }
   }
 }
