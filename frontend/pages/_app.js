@@ -5,13 +5,11 @@ import Layout from "../components/layout/index";
 import { ApolloProvider } from "@apollo/client";
 import { useApollo } from "../apollo/apollo-client";
 
-import cookie from "cookie";
-import { getAccessToken, setAccessToken } from "../apollo/access-token";
-
-import { uri } from "../apollo/api";
+import { setAccessToken } from "../apollo/access-token";
 
 import { StoreProvider } from "easy-peasy";
 import { store } from "../src/store";
+import { checkIfLoggedIn } from "../utils";
 
 function MyApp({ Component, pageProps, token, isLoggedIn }) {
   const client = useApollo(pageProps);
@@ -32,27 +30,9 @@ MyApp.getInitialProps = async (appContext) => {
   const appProps = await App.getInitialProps(appContext);
 
   // prima che la mia app venga renderizzata controllo che il token
-  // sia presente in tutte le req quindi lo prendo e lo parso
-  var token;
-  if (appContext.ctx.req?.headers.cookie) {
-    var c = cookie.parse(appContext.ctx.req.headers.cookie);
-    token = c.jid;
-    console.log("server: ", token);
-  } else {
-    token = getAccessToken();
-    console.log("client: ", token);
-  }
+  const { isLoggedIn, token } = await checkIfLoggedIn(appContext.ctx.req);
 
-  // fetcho la api per vedere se lo user corrente è loggato
-  const data = await fetch(uri + "/api/users/me", {
-    method: "GET",
-    headers: {
-      Authorization: "Bearer " + token,
-    },
-  }).then((res) => {
-    return res.json();
-  });
-  const isLoggedIn = data.error ? false : true;
+  isLoggedIn === false && setAccessToken("");
 
   // ritorno il token per settarlo
   return {

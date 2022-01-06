@@ -5,6 +5,8 @@ import { useMutation } from "@apollo/client";
 import { REGISTER, LOGIN } from "../../graphql/mutations/index";
 import { setAccessToken } from "../../apollo/access-token";
 
+import { setLoginDone } from "../../utils/index";
+
 import { validLoginRegister } from "../../utils/index";
 
 import View from "../../assets/view.svg";
@@ -199,9 +201,12 @@ export default function RegisterLoginForm() {
                 <Col sm={12} className="mt-3">
                   <button
                     onClick={async () => {
-                      setErrors(
-                        await validLoginRegister("login", loginInput, login)
+                      const res = await validLoginRegister(
+                        "login",
+                        loginInput,
+                        login
                       );
+                      setErrors(res);
                     }}
                     className="btn-lr"
                   >

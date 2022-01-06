@@ -1,3 +1,6 @@
+import { uri as apiUri } from "../apollo/api";
+import { parse } from "cookie";
+
 export const breakpoint = {
   sm: 576,
   md: 768,
@@ -20,13 +23,30 @@ export async function validLoginRegister(operation, input, callback) {
     .then((res) => res.json())
     .then((data) => {
       if (data.valid) {
-        // console.log("data yes: ", data);
         callback();
       } else {
-        // console.log("data no: ", data);
         return data;
       }
     });
+}
+
+export async function checkIfLoggedIn(req) {
+  var jid;
+  if (req.headers.cookie) {
+    jid = parse(req.headers.cookie).jid;
+  }
+
+  const data = await fetch(apiUri + "/api/users/me", {
+    method: "GET",
+    headers: {
+      Authorization: "Bearer " + jid,
+    },
+  }).then((res) => res.json());
+
+  return {
+    isLoggedIn: data.error ? false : true,
+    token: jid,
+  };
 }
 
 export function formatSongs(songs) {

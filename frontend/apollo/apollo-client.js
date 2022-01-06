@@ -35,8 +35,7 @@ export function createApolloClient() {
   });
 
   //link autenticazione
-  const authLink = setContext((_, { headers }) => {
-    // prendo il token
+  const authLink = setContext(async (_, { headers }) => {
     const token = getAccessToken();
 
     return {

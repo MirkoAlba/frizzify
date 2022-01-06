@@ -1,19 +1,38 @@
-import { uri } from "../apollo/api";
-import { NextResponse } from "next/server";
+// import { uri as apiUri } from "../apollo/api";
+
+// import { parse } from "cookie";
+// import { getAccessToken, setAccessToken } from "../apollo/access-token";
+// import { NextResponse } from "next/dist/server/web/spec-extension/response";
 
 export async function middleware(req, ev) {
   // const { pathname } = req.nextUrl;
-  // // fetcho la api per vedere se lo user corrente è loggato
-  // const data = await fetch(uri + "/api/users/me", {
+  // var token;
+  // if (req.headers.get("cookie")) {
+  //   token = parse(req.headers.get("cookie")).jid;
+  // }
+  // var isLoggedIn;
+  // const data = await fetch(apiUri + "/api/users/me", {
   //   method: "GET",
   //   headers: {
-  //     Authorization: "Bearer " + req?.cookies?.jid,
+  //     Authorization: "Bearer " + token,
   //   },
-  // }).then((res) => {
-  //   return res.json();
-  // });
-  // const isLoggedIn = data.error ? false : true;
-  // if (!isLoggedIn && pathname !== "/") {
+  // }).then((res) => res.json());
+  // isLoggedIn = data.error ? false : true;
+  // setAccessToken(token);
+  // console.log("at: ", getAccessToken());
+  // if (isLoggedIn && pathname !== "/") {
+  //   return NextResponse.next();
+  // } else if (!isLoggedIn && pathname !== "/") {
   //   return NextResponse.redirect("/");
+  // }
+  // if (!isLoggedIn && pathname.includes("/")) {
+  //   setAccessToken(jid);
+  //   return NextResponse.next();
+  // } else if (!isLoggedIn && pathname !== "/") {
+  //   setAccessToken("");
+  //   return NextResponse.redirect("/");
+  // } else if (isLoggedIn && !pathname.includes("/")) {
+  //   setAccessToken(jid);
+  //   return NextResponse.next();
   // }
 }
