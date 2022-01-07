@@ -2652,6 +2652,9 @@
                                                       "uid": {
                                                         "type": "string"
                                                       },
+                                                      "verified": {
+                                                        "type": "boolean"
+                                                      },
                                                       "createdAt": {
                                                         "type": "string",
                                                         "format": "date-time"
@@ -5723,6 +5726,9 @@
                                                     "uid": {
                                                       "type": "string"
                                                     },
+                                                    "verified": {
+                                                      "type": "boolean"
+                                                    },
                                                     "createdAt": {
                                                       "type": "string",
                                                       "format": "date-time"
@@ -8785,6 +8791,9 @@
                                                     "uid": {
                                                       "type": "string"
                                                     },
+                                                    "verified": {
+                                                      "type": "boolean"
+                                                    },
                                                     "createdAt": {
                                                       "type": "string",
                                                       "format": "date-time"
@@ -11764,6 +11773,9 @@
                                                     },
                                                     "uid": {
                                                       "type": "string"
+                                                    },
+                                                    "verified": {
+                                                      "type": "boolean"
                                                     },
                                                     "createdAt": {
                                                       "type": "string",

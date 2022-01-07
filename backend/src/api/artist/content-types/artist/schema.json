@@ -37,6 +37,9 @@
     "uid": {
       "type": "uid",
       "targetField": "artname"
+    },
+    "verified": {
+      "type": "boolean"
     }
   }
 }

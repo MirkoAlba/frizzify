@@ -1,5 +1,6 @@
 import { uri as apiUri } from "../apollo/api";
-import { parse } from "cookie";
+
+import useNextBlurhash from "use-next-blurhash";
 
 export const breakpoint = {
   sm: 576,
@@ -30,22 +31,18 @@ export async function validLoginRegister(operation, input, callback) {
     });
 }
 
-export async function checkIfLoggedIn(req) {
-  var jid;
-  if (req.headers.cookie) {
-    jid = parse(req.headers.cookie).jid;
-  }
-
+// params: valore del cookie parsato (token)
+export async function checkIfLoggedIn(token) {
   const data = await fetch(apiUri + "/api/users/me", {
     method: "GET",
     headers: {
-      Authorization: "Bearer " + jid,
+      Authorization: "Bearer " + token,
     },
   }).then((res) => res.json());
 
   return {
     isLoggedIn: data.error ? false : true,
-    token: jid,
+    token,
   };
 }
 
@@ -80,6 +77,10 @@ export function formatSongs(songs) {
           description:
             song.attributes.album.data.attributes.artist.data.attributes
               .description,
+          verified:
+            song.attributes.album.data.attributes.artist.data.attributes
+              .verified,
+          uid: song.attributes.album.data.attributes.artist.data.attributes.uid,
         },
       },
     };
@@ -117,12 +118,18 @@ export function formatSong(song) {
         description:
           song.data.attributes.album.data.attributes.artist.data.attributes
             .description,
+        verified:
+          song.attributes.album.data.attributes.artist.data.attributes.verified,
+        uid: song.attributes.album.data.attributes.artist.data.attributes.uid,
       },
     },
   };
 }
 
 export const formatArtists = (artists) => {
+  // get hash here -> https://blurha.sh/
+  // ritorno immagine sfocata tramite algoritomo blurhash
+  const [blurredImage] = useNextBlurhash("LH6Sa78w.TDh%hIU%2MxjEbdemkC");
   return artists.map((a) => {
     return {
       id: a.id,
@@ -130,6 +137,8 @@ export const formatArtists = (artists) => {
       artname: a.attributes.artname,
       description: a.attributes.description,
       picture: a.attributes.picture.data.attributes.url,
+      blurredPicture: blurredImage,
+      verified: a.attributes.verified,
     };
   });
 };

@@ -10,6 +10,7 @@ import { formatSong, convertDuration, formatSongs } from "../../utils/index";
 import { uri as apiUri } from "../../apollo/api";
 
 import Image from "next/image";
+import Link from "next/link";
 
 // store
 import { useStoreActions, useStoreState } from "easy-peasy";
@@ -209,6 +210,7 @@ export default function PlayingNowBar() {
         : currentSong.album.cover.url,
       currentSongName = currentSong.name,
       artist = currentSong.album.artist.artname,
+      artistUID = currentSong.album.artist.uid,
       currentSongFile = currentSong.file.url,
       songIndex = currentSong.index,
       explicitContent = currentSong.explicit;
@@ -227,7 +229,14 @@ export default function PlayingNowBar() {
             <div className="song-details ms-3">
               {/* TODO: add links to the current album and artist page */}
               <p className="text-white song-details__name">{currentSongName}</p>
-              <p className="text-white song-details__artist">{artist}</p>
+              <Link href={"/artist/" + artistUID}>
+                <a className="text-decoration-none link-animation">
+                  <p className="text-white song-details__artist">
+                    {artist}
+                    <span data-content={artist} aria-hidden="true"></span>
+                  </p>
+                </a>
+              </Link>
             </div>
             <button className="border-0 bg-unset ms-3">
               <Heart />

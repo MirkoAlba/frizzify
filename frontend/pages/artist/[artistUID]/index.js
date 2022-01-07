@@ -1,16 +1,20 @@
 import { GET_ARTISTS, GET_ARTIST_BY_UID } from "../../../graphql/queries";
 import { queryClient } from "../../../apollo/utils";
-
 import { formatArtists } from "../../../utils/index";
 
-export default function ArtistPage({ artist }) {
-  console.log(artist);
+import Hero from "../../../components/artist/hero";
+import { Fragment } from "react";
 
-  return <div>artists page</div>;
+export default function ArtistPage({ artist }) {
+  return (
+    <Fragment>
+      <Hero artist={artist} />
+    </Fragment>
+  );
 }
 
-export async function getStaticProps({ params }) {
-  const { artistUID } = params;
+export async function getStaticProps(ctx) {
+  const { artistUID } = ctx.params;
   const { data } = await queryClient({
     query: GET_ARTIST_BY_UID,
     variables: {
@@ -21,7 +25,7 @@ export async function getStaticProps({ params }) {
   });
 
   return {
-    props: { artist: data.artists.data },
+    props: { artist: formatArtists(data.artists.data) },
   };
 }
 

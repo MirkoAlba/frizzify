@@ -10,6 +10,7 @@ import { setAccessToken } from "../apollo/access-token";
 import { StoreProvider } from "easy-peasy";
 import { store } from "../src/store";
 import { checkIfLoggedIn } from "../utils";
+import { parse } from "cookie";
 
 function MyApp({ Component, pageProps, token, isLoggedIn }) {
   const client = useApollo(pageProps);
@@ -29,8 +30,12 @@ function MyApp({ Component, pageProps, token, isLoggedIn }) {
 MyApp.getInitialProps = async (appContext) => {
   const appProps = await App.getInitialProps(appContext);
 
-  // prima che la mia app venga renderizzata controllo che il token
-  const { isLoggedIn, token } = await checkIfLoggedIn(appContext.ctx.req);
+  var jid;
+  if (appContext.ctx.req?.headers.cookie) {
+    jid = parse(appContext.ctx.req.headers.cookie).jid;
+  }
+  // prima che la mia app venga renderizzata controllo che il token sia presente nella req
+  const { isLoggedIn, token } = await checkIfLoggedIn(jid);
 
   isLoggedIn === false && setAccessToken("");
 

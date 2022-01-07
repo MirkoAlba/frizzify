@@ -27,3 +27,39 @@ main.main-content {
 .bg-unset {
   background: unset;
 }
+
+.text-decoration-none {
+  text-decoration: none;
+}
+
+.link-animation {
+  position: relative;
+  display: inline-block;
+  color: $white;
+  overflow: hidden;
+  span {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 20;
+    overflow: hidden;
+    transform: translateX(-100%);
+    transition: transform 275ms ease;
+    &::before {
+      display: inline-block;
+      content: attr(data-content); // attr data-content
+      //color to be filled
+      color: $light-blue;
+      transform: translateX(100%);
+      transition: transform 275ms ease;
+    }
+  }
+  &:hover {
+    span {
+      transform: translateX(0);
+      &::before {
+        transform: translateX(0);
+      }
+    }
+  }
+}

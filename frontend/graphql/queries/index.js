@@ -42,6 +42,7 @@ export const SONG = gql`
                   data {
                     id
                     attributes {
+                      verified
                       uid
                       artname
                       description
@@ -97,6 +98,7 @@ export const SONGS = gql`
                   data {
                     id
                     attributes {
+                      verified
                       uid
                       artname
                       description
@@ -229,6 +231,7 @@ export const QUEUES = gql`
                         data {
                           id
                           attributes {
+                            verified
                             uid
                             artname
                             description
@@ -265,6 +268,7 @@ export const GET_ARTISTS = gql`
       data {
         id
         attributes {
+          verified
           uid
           artname
           picture {
@@ -321,6 +325,7 @@ export const GET_ARTIST_BY_UID = gql`
         id
         attributes {
           artname
+          verified
           description
           uid
           picture {

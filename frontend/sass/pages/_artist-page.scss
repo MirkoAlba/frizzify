@@ -1,0 +1,11 @@
+.artist-hero {
+  height: 35vh;
+
+  h1 {
+    z-index: 2;
+  }
+
+  @include media-breakpoint-down(md) {
+    height: 20vh;
+  }
+}

@@ -15,7 +15,7 @@ export default function handler(req, res) {
         httpOnly: true,
         // domain: ".example.com",
         secure: process.env.NODE_ENV !== "development",
-        maxAge: 6 * 60 * 60 * 1000,
+        maxAge: 60 * 60 * 24 * 3,
         sameSite: "strict",
         path: "/",
       })
