@@ -1,6 +1,7 @@
 .player-main {
   display: grid;
   height: 100vh;
+  min-width: 320px;
   grid-template-columns: var(--sidebarWidth) 1fr;
   grid-template-rows:
     1fr

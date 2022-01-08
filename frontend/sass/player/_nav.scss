@@ -65,6 +65,7 @@
     }
 
     &--mobile {
+      min-width: 320px;
       width: 100vw;
       height: rem(40px);
     }

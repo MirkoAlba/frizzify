@@ -27,6 +27,7 @@ export const SONG = gql`
             data {
               id
               attributes {
+                uid
                 name
                 description
                 releaseDate
@@ -85,6 +86,7 @@ export const SONGS = gql`
             data {
               id
               attributes {
+                uid
                 name
                 cover {
                   data {
@@ -218,6 +220,7 @@ export const QUEUES = gql`
                   data {
                     id
                     attributes {
+                      uid
                       name
                       cover {
                         data {
@@ -283,6 +286,7 @@ export const GET_ARTISTS = gql`
             data {
               id
               attributes {
+                uid
                 releaseDate
                 description
                 songs {
@@ -339,6 +343,7 @@ export const GET_ARTIST_BY_UID = gql`
             data {
               id
               attributes {
+                uid
                 releaseDate
                 genre
                 name
@@ -373,6 +378,69 @@ export const GET_ARTIST_BY_UID = gql`
                     }
                   }
                 }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+export const GET_ALBUMS_UID = gql`
+  query {
+    albums {
+      data {
+        id
+        attributes {
+          uid
+        }
+      }
+    }
+  }
+`;
+
+// { album: { uid: { eq: 1 } } }
+export const GET_ALBUM_BY_UID = gql`
+  query getAlbumsByUid($filters: AlbumFiltersInput) {
+    albums(filters: $filters) {
+      data {
+        id
+        attributes {
+          uid
+          name
+          releaseDate
+          genre
+          description
+          cover {
+            data {
+              attributes {
+                url
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+// { artist: { id: { eq: 1 } } }
+export const GET_ARTIST_ALBUMS = gql`
+  query artistAlbums($filters: AlbumFiltersInput) {
+    albums(filters: $filters) {
+      data {
+        id
+        attributes {
+          uid
+          name
+          releaseDate
+          genre
+          description
+          cover {
+            data {
+              attributes {
+                url
               }
             }
           }

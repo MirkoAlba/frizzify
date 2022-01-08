@@ -1,14 +1,50 @@
-import { GET_ARTISTS, GET_ARTIST_BY_UID } from "../../../graphql/queries";
+import { Fragment } from "react";
+import { Container, Row } from "react-bootstrap";
+
+import {
+  GET_ARTISTS,
+  GET_ARTIST_BY_UID,
+  GET_ARTIST_ALBUMS,
+} from "../../../graphql/queries";
 import { queryClient } from "../../../apollo/utils";
-import { formatArtists } from "../../../utils/index";
+import { useQuery } from "@apollo/client";
+
+import { formatArtists, formatAlbums } from "../../../utils/index";
 
 import Hero from "../../../components/artist/hero";
-import { Fragment } from "react";
+import Card from "../../../components/card";
 
 export default function ArtistPage({ artist }) {
+  const artistData = artist[0];
+
+  const { data, loading, error } = useQuery(GET_ARTIST_ALBUMS, {
+    variables: {
+      pagination: { limit: 5 },
+      artist: { id: { eq: artistData.id } },
+    },
+  });
+
+  data && (data = formatAlbums(data.albums.data));
+
   return (
     <Fragment>
-      <Hero artist={artist} />
+      <Hero artist={artistData} />
+      <section className="artist__albums">
+        {error ? (
+          <h2 className="text-white">errore....</h2>
+        ) : loading && !data ? (
+          <h2 className="text-white">loading....</h2>
+        ) : (
+          <Container fluid>
+            <Row className="mb-30 mb-md-45">
+              <h5 className="text-white">Albums</h5>
+              {data.map((d) => {
+                return <Card key={d.id} data={d} />;
+              })}
+            </Row>
+          </Container>
+        )}
+      </section>
     </Fragment>
   );
 }

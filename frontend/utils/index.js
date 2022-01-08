@@ -66,6 +66,7 @@ export function formatSongs(songs) {
         description: song.attributes.album.data.attributes.description,
         genre: song.attributes.album.data.attributes.genre,
         releaseDate: song.attributes.album.data.attributes.releaseDate,
+        uid: song.attributes.album.data.attributes.uid,
         cover: {
           url: song.attributes.album.data.attributes.cover.data.attributes.url,
         },
@@ -106,6 +107,7 @@ export function formatSong(song) {
       description: song.data.attributes.album.data.attributes.description,
       genre: song.data.attributes.album.data.attributes.genre,
       releaseDate: song.data.attributes.album.data.attributes.releaseDate,
+      uid: song.data.attributes.album.data.attributes.uid,
       cover: {
         url: song.data.attributes.album.data.attributes.cover.data.attributes
           .url,
@@ -141,6 +143,40 @@ export const formatArtists = (artists) => {
       verified: a.attributes.verified,
     };
   });
+};
+
+export const formatAlbums = (albums) => {
+  // get hash here -> https://blurha.sh/
+  // ritorno immagine sfocata tramite algoritomo blurhash
+  const [blurredCover] = useNextBlurhash("LDATcbR*%}xt_Mofkqt7pcMx$iM{");
+  return albums.map((a) => {
+    return {
+      id: a.id,
+      name: a.attributes.name,
+      description: a.attributes.description,
+      genre: a.attributes.genre,
+      releaseDate: a.attributes.releaseDate,
+      uid: a.attributes.uid,
+      coverUrl: a.attributes.cover.data.attributes.url,
+      blurredCover,
+    };
+  });
+};
+
+export const formatAlbum = (album) => {
+  // get hash here -> https://blurha.sh/
+  // ritorno immagine sfocata tramite algoritomo blurhash
+  const [blurredCover] = useNextBlurhash("LDATcbR*%}xt_Mofkqt7pcMx$iM{");
+  return {
+    id: album.id,
+    name: album.attributes.name,
+    description: album.attributes.description,
+    genre: album.attributes.genre,
+    releaseDate: album.attributes.releaseDate,
+    uid: album.attributes.uid,
+    coverUrl: album.attributes.cover.data.attributes.url,
+    blurredCover,
+  };
 };
 
 export function convertDuration(time) {

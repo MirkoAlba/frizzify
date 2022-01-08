@@ -1,11 +1,17 @@
-.artist-hero {
-  height: 35vh;
+.artist {
+  &-hero {
+    height: 35vh;
 
-  h1 {
+    @include media-breakpoint-down(md) {
+      height: 20vh;
+    }
+  }
+
+  &__content {
     z-index: 2;
   }
+}
 
-  @include media-breakpoint-down(md) {
-    height: 20vh;
-  }
+.player-main__content {
+  background-color: $dark;
 }

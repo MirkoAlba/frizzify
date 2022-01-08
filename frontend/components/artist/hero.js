@@ -1,5 +1,4 @@
 import { Fragment } from "react";
-import { Row, Col } from "react-bootstrap";
 
 import Image from "next/image";
 
@@ -8,21 +7,24 @@ import Verified from "../../assets/verified.svg";
 import { uri as apiUrl } from "../../apollo/api";
 
 export default function ArtistHero({ artist }) {
-  const data = artist[0];
-
   return (
     <Fragment>
-      <div className="artist-hero position-relative d-flex align-items-end justify-content-center justify-content-xl-start px-3">
+      <div className="artist-hero position-relative d-flex align-items-end px-3">
         <Image
-          src={apiUrl + data.picture}
+          src={apiUrl + artist.picture}
           layout="fill"
           objectFit="cover"
           objectPosition="center"
           placeholder="blur"
-          blurDataURL={data.blurredPicture}
-          alt={"Frizzifi Artist - " + data.artname}
+          blurDataURL={artist.blurredPicture}
+          alt={"Frizzifi Artist - " + artist.artname}
         />
-        <h1 className="position-relative text-white">{data.artname}</h1>
+        <div className="artist__content position-relative">
+          {artist.verified && <Verified />}
+          <h1 className=" text-white">{artist.artname}</h1>
+          {/* TODO: monthly listeners */}
+          <p className="text-white">ascoltatori mensili</p>
+        </div>
       </div>
     </Fragment>
   );
