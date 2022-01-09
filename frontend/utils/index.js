@@ -54,36 +54,46 @@ export function formatSongs(songs) {
       name: song.attributes.name,
       description: song.attributes.description,
       explicit: song.attributes.explicit,
+
       file: {
         url: song.attributes.file.data.attributes.url,
+        size: song.attributes.file.data.attributes.size,
       },
+
       cover: {
-        url: song.attributes.cover.data?.attributes.url,
+        url: song.attributes.cover.data?.attributes?.url
+          ? song.attributes.cover.data.attributes.url
+          : null,
       },
-      album: {
-        id: song.attributes.album.data.id,
-        name: song.attributes.album.data.attributes.name,
-        description: song.attributes.album.data.attributes.description,
-        genre: song.attributes.album.data.attributes.genre,
-        releaseDate: song.attributes.album.data.attributes.releaseDate,
-        uid: song.attributes.album.data.attributes.uid,
-        cover: {
-          url: song.attributes.album.data.attributes.cover.data.attributes.url,
-        },
-        artist: {
-          id: song.attributes.album.data.attributes.artist.data.id,
-          artname:
-            song.attributes.album.data.attributes.artist.data.attributes
-              .artname,
-          description:
-            song.attributes.album.data.attributes.artist.data.attributes
-              .description,
-          verified:
-            song.attributes.album.data.attributes.artist.data.attributes
-              .verified,
-          uid: song.attributes.album.data.attributes.artist.data.attributes.uid,
-        },
-      },
+
+      album: song.attributes.album
+        ? {
+            id: song.attributes.album?.data.id,
+            name: song.attributes.album?.data.attributes.name,
+            description: song.attributes.album?.data.attributes.description,
+            genre: song.attributes.album?.data.attributes.genre,
+            releaseDate: song.attributes.album?.data.attributes.releaseDate,
+            uid: song.attributes.album?.data.attributes.uid,
+            cover: {
+              url: song.attributes.album?.data.attributes.cover?.data
+                ?.attributes.url,
+            },
+            artist: {
+              id: song.attributes.album?.data.attributes.artist.data.id,
+              artname:
+                song.attributes.album?.data.attributes.artist.data.attributes
+                  .artname,
+              description:
+                song.attributes.album?.data.attributes.artist.data.attributes
+                  .description,
+              verified:
+                song.attributes.album?.data.attributes.artist.data.attributes
+                  .verified,
+              uid: song.attributes.album?.data.attributes.artist.data.attributes
+                .uid,
+            },
+          }
+        : null,
     };
   });
 }
@@ -97,32 +107,34 @@ export function formatSong(song) {
     explicit: song.data.attributes.explicit,
     file: {
       url: song.data.attributes.file.data.attributes.url,
+      size: song.data.attributes.file.data.attributes.size,
     },
     cover: {
-      url: song.data.attributes.cover.data?.attributes.url,
+      url: song.data.attributes.cover?.data?.attributes.url,
     },
     album: {
-      id: song.data.attributes.album.data.id,
-      name: song.data.attributes.album.data.attributes.name,
-      description: song.data.attributes.album.data.attributes.description,
-      genre: song.data.attributes.album.data.attributes.genre,
-      releaseDate: song.data.attributes.album.data.attributes.releaseDate,
-      uid: song.data.attributes.album.data.attributes.uid,
+      id: song.data.attributes.album?.data.id,
+      name: song.data.attributes.album?.data.attributes.name,
+      description: song.data.attributes.album?.data.attributes.description,
+      genre: song.data.attributes.album?.data.attributes.genre,
+      releaseDate: song.data.attributes.album?.data.attributes.releaseDate,
+      uid: song.data.attributes.album?.data.attributes.uid,
       cover: {
-        url: song.data.attributes.album.data.attributes.cover.data.attributes
+        url: song.data.attributes.album?.data.attributes.cover?.data?.attributes
           .url,
       },
       artist: {
-        id: song.data.attributes.album.data.attributes.artist.data.id,
+        id: song.data.attributes.album?.data.attributes.artist.data.id,
         artname:
-          song.data.attributes.album.data.attributes.artist.data.attributes
+          song.data.attributes.album?.data.attributes.artist.data.attributes
             .artname,
         description:
-          song.data.attributes.album.data.attributes.artist.data.attributes
+          song.data.attributes.album?.data.attributes.artist.data.attributes
             .description,
         verified:
-          song.attributes.album.data.attributes.artist.data.attributes.verified,
-        uid: song.attributes.album.data.attributes.artist.data.attributes.uid,
+          song.attributes.album?.data.attributes.artist.data.attributes
+            .verified,
+        uid: song.attributes.album?.data.attributes.artist.data.attributes.uid,
       },
     },
   };
@@ -143,6 +155,21 @@ export const formatArtists = (artists) => {
       verified: a.attributes.verified,
     };
   });
+};
+
+export const formatArtist = (a) => {
+  // get hash here -> https://blurha.sh/
+  // ritorno immagine sfocata tramite algoritomo blurhash
+  const [blurredImage] = useNextBlurhash("LH6Sa78w.TDh%hIU%2MxjEbdemkC");
+  return {
+    id: a.id,
+    uid: a.attributes.uid,
+    artname: a.attributes.artname,
+    description: a.attributes.description,
+    picture: a.attributes.picture.data.attributes.url,
+    blurredPicture: blurredImage,
+    verified: a.attributes.verified,
+  };
 };
 
 export const formatAlbums = (albums) => {
@@ -176,6 +203,8 @@ export const formatAlbum = (album) => {
     uid: album.attributes.uid,
     coverUrl: album.attributes.cover.data.attributes.url,
     blurredCover,
+    songs: formatSongs(album.attributes.songs.data),
+    artist: formatArtist(album.attributes.artist.data),
   };
 };
 

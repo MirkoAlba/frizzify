@@ -1,3 +1,5 @@
+import { Fragment } from "react";
+
 import {
   GET_ALBUMS_UID,
   GET_ALBUM_BY_UID,
@@ -5,11 +7,13 @@ import {
 import { queryClient } from "../../../apollo/utils";
 import { formatAlbum } from "../../../utils";
 
+import AlbumHero from "../../../components/album/hero";
+
 export default function AlbumPage({ album }) {
   return (
-    <div>
-      <h1 className="text-white">album</h1>
-    </div>
+    <Fragment>
+      <AlbumHero album={album} />
+    </Fragment>
   );
 }
 

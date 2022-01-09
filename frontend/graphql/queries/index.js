@@ -13,6 +13,7 @@ export const SONG = gql`
             data {
               attributes {
                 url
+                size
               }
             }
           }
@@ -72,6 +73,7 @@ export const SONGS = gql`
             data {
               attributes {
                 url
+                size
               }
             }
           }
@@ -206,6 +208,7 @@ export const QUEUES = gql`
                   data {
                     attributes {
                       url
+                      size
                     }
                   }
                 }
@@ -299,6 +302,7 @@ export const GET_ARTISTS = gql`
                         data {
                           attributes {
                             url
+                            size
                           }
                         }
                       }
@@ -371,6 +375,7 @@ export const GET_ARTIST_BY_UID = gql`
                         data {
                           attributes {
                             url
+                            size
                           }
                         }
                       }
@@ -407,15 +412,65 @@ export const GET_ALBUM_BY_UID = gql`
       data {
         id
         attributes {
-          uid
           name
           releaseDate
           genre
+          uid
           description
+
           cover {
             data {
               attributes {
                 url
+              }
+            }
+          }
+
+          artist {
+            data {
+              id
+              attributes {
+                artname
+                description
+                uid
+                verified
+
+                picture {
+                  data {
+                    attributes {
+                      url
+                    }
+                  }
+                }
+              }
+            }
+          }
+
+          songs {
+            data {
+              id
+              attributes {
+                name
+                description
+
+                explicit
+
+                cover {
+                  data {
+                    attributes {
+                      url
+                    }
+                  }
+                }
+
+                file {
+                  data {
+                    attributes {
+                      url
+                      size
+                    }
+                  }
+                }
               }
             }
           }

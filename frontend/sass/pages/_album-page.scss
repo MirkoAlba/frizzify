@@ -1,0 +1,40 @@
+.album {
+  &-hero {
+    min-height: 30vh;
+
+    .ratio {
+      border-radius: rem(20px);
+      overflow: hidden;
+      width: rem(250px);
+    }
+
+    .artist-icon {
+      width: rem(30px);
+      height: rem(30px);
+      border-radius: rem(5px);
+      overflow: hidden;
+    }
+
+    @include media-breakpoint-down(md) {
+      min-height: 25vh;
+
+      h1 {
+        font-size: rem(20px);
+      }
+
+      p {
+        font-size: rem(14px);
+      }
+
+      .ratio {
+        width: rem(150px);
+      }
+    }
+
+    @include media-breakpoint-down(sm) {
+      .ratio {
+        width: rem(100px);
+      }
+    }
+  }
+}
