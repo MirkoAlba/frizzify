@@ -57,7 +57,18 @@ export function createApolloClient() {
   return new ApolloClient({
     ssrMode: typeof window === "undefined",
     link: ApolloLink.from([errorLink, authLink.concat(httpLink)]),
-    cache: new InMemoryCache(),
+    // FIXED warning : Cache data may be lost when replacing the attributes field of a AlbumEntity object.
+    cache: new InMemoryCache({
+      typePolicies: {
+        AlbumEntity: {
+          fields: {
+            attributes: {
+              merge: true,
+            },
+          },
+        },
+      },
+    }),
   });
 }
 
