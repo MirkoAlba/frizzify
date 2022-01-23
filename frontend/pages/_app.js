@@ -12,6 +12,10 @@ import { store } from "../src/store";
 import { checkIfLoggedIn } from "../utils";
 import { parse } from "cookie";
 
+// TODO:
+// - finish styling album, artist and render songs;
+// - add to queue button, handle queue in player-bar
+// - find out how to save current state simultaneously across all logged in devices
 function MyApp({ Component, pageProps, token, isLoggedIn }) {
   const client = useApollo(pageProps);
   setAccessToken(token);

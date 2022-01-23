@@ -62,6 +62,7 @@ export async function getStaticProps(ctx) {
 
   return {
     props: { artist: formatArtists(data.artists.data) },
+    revalidate: 60,
   };
 }
 
@@ -78,6 +79,6 @@ export async function getStaticPaths() {
         },
       };
     }),
-    fallback: false,
+    fallback: true,
   };
 }

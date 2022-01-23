@@ -30,6 +30,7 @@ export async function getStaticProps(ctx) {
 
   return {
     props: { album: formatAlbum(data.albums.data[0]) },
+    revalidate: 60,
   };
 }
 
@@ -45,6 +46,6 @@ export async function getStaticPaths() {
         },
       };
     }),
-    fallback: false,
+    fallback: true,
   };
 }
