@@ -3,6 +3,7 @@
     border-radius: rem(25px);
     background-color: rgba($white, 0.1);
     transition: all 0.3s ease-in-out;
+    max-width: 225px;
 
     &:hover {
       transition: all 0.2s ease-in-out;
