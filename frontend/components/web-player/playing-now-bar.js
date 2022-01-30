@@ -28,6 +28,7 @@ import HeartFill from "../../assets/bar/heart-fill.svg";
 import Play from "../../assets/bar/play-button.svg";
 import Pause from "../../assets/bar/pause-button.svg";
 import Rewind from "../../assets/bar/rewind.svg";
+import { set } from "lodash";
 
 export default function PlayingNowBar() {
   // TODO: check length of songName and artist and add horizontal scrolling text animation (22 chars max length)
@@ -50,31 +51,6 @@ export default function PlayingNowBar() {
     ? { width: 35, height: 35 }
     : { width: 55, height: 55 };
 
-  // global state
-  const storeState = useStoreState((state) => state);
-  const setCurrentQueue = useStoreActions((actions) => actions.setCurrentQueue);
-
-  // set queue global state
-  const setQueueInGlobalState = () => {
-    setCurrentQueue({
-      currentSong: {
-        currentSongIndex: currentSong?.index,
-        draggerPosition,
-        time,
-      },
-      songs,
-    });
-  };
-  // retrieve queue values from global state
-  const getQueuePropsFromState = () => {
-    return {
-      currentSongIndex: storeState.user.queue.currentSong.currentSongIndex,
-      draggerPosition: storeState.user.queue.currentSong.draggerPosition,
-      time: storeState.user.queue.currentSong.time,
-      songs: storeState.user.queue.songs,
-    };
-  };
-
   // handle playing
   const [isPlaying, setIsPlaying] = useState(false);
   const togglePlaying = (audio) => {
@@ -85,7 +61,6 @@ export default function PlayingNowBar() {
   // fetch data
   const [songs, setSongs] = useState();
   const [currentSong, setCurrentSong] = useState();
-
   const { loading } = useQuery(SONGS, {
     onCompleted: (d) => {
       const songs = formatSongs(d.songs.data);
@@ -95,116 +70,34 @@ export default function PlayingNowBar() {
   });
 
   const [audio, setAudio] = useState(); // audio object
-  const [time, setTime] = useState(getQueuePropsFromState().time); // duration, currentDuration, progress
-
-  const draggerRef = useRef();
-  const [draggerPosition, setDraggerPosition] = useState(
-    getQueuePropsFromState().draggerPosition
-  );
-
-  const handleDrag = () => {
-    const rawDuration = Math.ceil(audio?.duration); // durata in secondi
-    const barWidth = draggerRef.current.parentElement.offsetWidth; // larghezza barra in px
-    const draggerCurrentPosition = window
-      .getComputedStyle(draggerRef.current)
-      .getPropertyValue("transform")
-      .match(/(-?[0-9\.]+)/g)[4]; // posizione X del dragger nella barra in px
-
-    const perc =
-      (draggerCurrentPosition * 100) / barWidth < 0
-        ? 0
-        : (draggerCurrentPosition * 100) / barWidth;
-    const finalDuration =
-      (rawDuration * perc) / 100 < 0 ? 0 : (rawDuration * perc) / 100; // posizione dragger nella barra in %
-
-    setTime({
-      ...time,
-      currentDuration: convertDuration(finalDuration),
-      currentRawDuration: Math.ceil(audio.currentTime),
-      progress: perc,
-    });
-
-    audio.currentTime = Math.ceil(finalDuration);
-    setDraggerPosition({ x: parseInt(draggerCurrentPosition), y: 0 });
-
-    setQueueInGlobalState();
-  };
-
-  const moveDragger = () => {
-    const barWidth = draggerRef?.current?.parentElement?.offsetWidth; // larghezza barra in px
-    const draggerXpos = (time.progress * barWidth) / 100; // posizione dragger in px
-    setDraggerPosition({ x: Math.ceil(draggerXpos), y: 0 });
-
-    setQueueInGlobalState();
-  };
+  const [time, setTime] = useState(); // duration, currentDuration, progress
 
   const nextSong = (currentSongIndex) => {
     const index =
       currentSongIndex + 1 > songs.length - 1 ? 0 : currentSongIndex + 1;
     setCurrentSong(songs[index]);
-    setTime({
-      duration: convertDuration(audio?.duration),
-      currentDuration: "0:00",
-      currentRawDuration: 0,
-      progress: 0,
-    });
-    audio.currentTime = 0;
-    setDraggerPosition({ x: 0, y: 0 });
-
-    // reset in global state the time values
-    setCurrentQueue({
-      currentSong: {
-        currentSongIndex: index,
-        draggerPosition,
-        time: {
-          currentDuration: "0:00",
-          currentRawDuration: 0,
-          duration: time.duration,
-          progress: 0,
-        },
-      },
-      songs,
-    });
   };
 
   const prevSong = (currentSongIndex) => {
     const index =
       currentSongIndex - 1 === -1 ? songs.length - 1 : currentSongIndex - 1;
     setCurrentSong(songs[index]);
-    setTime({
-      duration: convertDuration(audio?.duration),
-      currentDuration: "0:00",
-      currentRawDuration: 0,
-      progress: 0,
-    });
-    audio.currentTime = 0;
-    setDraggerPosition({ x: 0, y: 0 });
-
-    // reset in global state the time values
-    setCurrentQueue({
-      currentSong: {
-        currentSongIndex: index,
-        draggerPosition,
-        time: {
-          currentDuration: "0:00",
-          currentRawDuration: 0,
-          duration: time.duration,
-          progress: 0,
-        },
-      },
-      songs,
-    });
   };
 
-  // handle dragger position on window resize
-  useEffect(() => {
-    window.addEventListener("resize", moveDragger);
-    return () => {
-      window.removeEventListener("resize", moveDragger);
-    };
-  }, []);
+  // RANGE INPUT
+  const rangeInputRef = useRef();
+
+  const handleInputRangeChange = (e) => {
+    audio.currentTime = e.target.value;
+  };
+
+  // serve per avere defined audio obejct
+  const [loadedMeta, setLoadedMeta] = useState(false);
+
+  // audio player functions
 
   if (currentSong && !loading) {
+    // song data
     const coverUrl = currentSong.cover.url
         ? currentSong.cover.url
         : currentSong.album.cover.url,
@@ -227,7 +120,6 @@ export default function PlayingNowBar() {
               />
             </div>
             <div className="song-details ms-3">
-              {/* TODO: add links to the current album and artist page */}
               <p className="text-white song-details__name">{currentSongName}</p>
               <Link href={"/artist/" + artistUID}>
                 <a className="text-decoration-none link-animation">
@@ -266,7 +158,6 @@ export default function PlayingNowBar() {
 
                 <button
                   onClick={async () => {
-                    // await saveQueue();
                     nextSong(songIndex);
                   }}
                   className="btn- bg-unset border-0"
@@ -275,56 +166,6 @@ export default function PlayingNowBar() {
                 </button>
               </div>
 
-              {!isMobile && (
-                <div className="playback-bar w-100 d-flex justify-content-center align-items-center pt-1">
-                  <p className="playback-bar__time ms-2">
-                    {time.currentDuration}
-                  </p>
-
-                  <div className="wrapper-playback-bar">
-                    <div className="playback-bar__progress">
-                      <div
-                        style={{
-                          transform: `translateX(calc(-100% + ${time?.progress}%))`,
-                        }}
-                        className="playback-bar__progress--current-time"
-                      ></div>
-                    </div>
-                    <Draggable
-                      axis="x"
-                      bounds="parent"
-                      nodeRef={draggerRef}
-                      onStart={() => {
-                        // setIsPlaying(false);
-                        // audio.pause();
-
-                        if (isPlaying) {
-                          setIsPlaying(false);
-                          audio.pause();
-                        }
-                      }}
-                      onStop={() => {
-                        // setIsPlaying(true);
-                        // audio.play();
-
-                        if (!isPlaying) {
-                          setIsPlaying(true);
-                          audio.play();
-                        }
-                      }}
-                      onDrag={() => handleDrag()}
-                      position={draggerPosition}
-                    >
-                      <div ref={draggerRef} className="dragger"></div>
-                    </Draggable>
-                  </div>
-
-                  <p className="playback-bar__time me-2">
-                    {convertDuration(audio?.duration)}
-                  </p>
-                </div>
-              )}
-
               <ReactAudioPlayer
                 ref={(e) => {
                   setAudio(e?.audioEl.current);
@@ -332,31 +173,17 @@ export default function PlayingNowBar() {
                 src={apiUri + currentSongFile}
                 listenInterval={500}
                 onLoadedMetadata={() => {
-                  // setTime({
-                  //   duration: convertDuration(audio?.duration),
-                  //   currentDuration: "0:00",
-                  //   currentRawDuration: Math.ceil(audio.currentTime),
-                  //   progress: 0,
-                  // });
-                  setTime(getQueuePropsFromState().time);
-                  audio.currentTime = time.currentRawDuration
-                    ? time.currentRawDuration
-                    : 0;
+                  setLoadedMeta(true);
+                  rangeInputRef.current.value = audio.currentTime;
                 }}
-                onListen={async () => {
-                  setTime({
-                    ...time,
-                    currentDuration: convertDuration(audio?.currentTime),
-                    currentRawDuration: Math.ceil(audio.currentTime),
-                    progress: (audio?.currentTime / audio?.duration) * 100,
-                  });
-                  moveDragger();
-                  setQueueInGlobalState();
+                onListen={() => {
+                  rangeInputRef.current.value = audio.currentTime;
+                }}
+                onSeeked={(e) => {
+                  // console.log(e);
                 }}
                 // quando ha scaricato abbastanza per poter partire
-                onCanPlay={() => {
-                  setQueueInGlobalState();
-                }}
+                onCanPlay={() => {}}
                 // traccia finita
                 onEnded={() => nextSong(songIndex)}
                 // unload src file
@@ -368,6 +195,16 @@ export default function PlayingNowBar() {
                   }
                 }}
               />
+
+              {loadedMeta && (
+                <input
+                  onChange={handleInputRangeChange}
+                  min={0}
+                  max={parseInt(audio.duration)}
+                  ref={rangeInputRef}
+                  type="range"
+                />
+              )}
             </div>
           </Col>
 

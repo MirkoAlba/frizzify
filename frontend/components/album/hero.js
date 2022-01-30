@@ -13,7 +13,7 @@ export default function AlbumHero({ album }) {
   const { data, loading } = usePalette(apiUrl + album.coverUrl);
   const { artist } = album;
   const releaseDateFormatted = dayjs(album.releaseDate).format("YYYY");
-  console.log(album);
+  // console.log(album);
 
   return (
     <div
