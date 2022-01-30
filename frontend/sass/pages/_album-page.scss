@@ -1,6 +1,6 @@
 .album {
   &-hero {
-    min-height: 30vh;
+    min-height: 35vh;
 
     .ratio {
       border-radius: rem(20px);
@@ -13,6 +13,10 @@
       height: rem(30px);
       border-radius: rem(5px);
       overflow: hidden;
+    }
+
+    @include media-breakpoint-down(lg) {
+      min-height: 30vh;
     }
 
     @include media-breakpoint-down(md) {

@@ -36,8 +36,8 @@ export default function ArtistPage({ artist }) {
           <h2 className="text-white">loading....</h2>
         ) : (
           <Container fluid>
-            <Row className="mb-30 mb-md-45">
-              <h5 className="text-white">Albums</h5>
+            <Row className="mt-3 mb-30 mb-md-45">
+              <h5 className="text-white mb-3">Albums</h5>
               {data.map((d) => {
                 return <Card key={d.id} data={d} />;
               })}

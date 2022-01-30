@@ -15,7 +15,8 @@ export default function MusicCard({ data }) {
 
   return (
     <Fragment>
-      <Col xs={6} md={4} lg={3} xxl={2}>
+      {/* <Col xs={6} md={4} lg={3} xxl={2}> */}
+      <Col className="col-auto mb-3">
         <Link href={"/album/" + data.uid}>
           <a className="text-decoration-none d-block">
             <div className="card--album p-3 position-relative">

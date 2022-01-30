@@ -2,6 +2,10 @@
   &-hero {
     height: 35vh;
 
+    @include media-breakpoint-down(lg) {
+      height: 30vh;
+    }
+
     @include media-breakpoint-down(md) {
       height: 20vh;
     }
