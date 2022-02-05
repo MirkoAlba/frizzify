@@ -1,6 +1,8 @@
 import { Row, Col } from "react-bootstrap";
 
 import { useState, useRef, useEffect } from "react";
+import useWindowDimensions from "../../hooks/use-viewport-dimensions";
+import { breakpoint } from "../../utils/index";
 
 import { useQuery } from "@apollo/client";
 import { SONGS, QUEUES } from "../../graphql/queries/index";
@@ -8,6 +10,8 @@ import { SONGS, QUEUES } from "../../graphql/queries/index";
 import { formatSong, convertDuration, formatSongs } from "../../utils/index";
 
 import { uri as apiUri } from "../../apollo/api";
+
+import axios from "axios";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -18,9 +22,6 @@ import { useStoreActions, useStoreState } from "easy-peasy";
 // player components
 import ReactAudioPlayer from "react-audio-player";
 import Draggable from "react-draggable";
-
-import useWindowDimensions from "../../hooks/use-viewport-dimensions";
-import { breakpoint } from "../../utils/index";
 
 // svgs
 import Heart from "../../assets/bar/heart.svg";
@@ -84,17 +85,27 @@ export default function PlayingNowBar() {
     setCurrentSong(songs[index]);
   };
 
-  // RANGE INPUT
-  const rangeInputRef = useRef();
-
-  const handleInputRangeChange = (e) => {
-    audio.currentTime = e.target.value;
-  };
-
   // serve per avere defined audio obejct
   const [loadedMeta, setLoadedMeta] = useState(false);
 
-  // audio player functions
+  // RANGE INPUT
+  const rangeInputRef = useRef();
+  const [mouseDownOnSlider, setMouseDownOnSlider] = useState(false);
+
+  // EVENT HANDLERS FUNCTIONS
+  const handleOnLoadMetadata = () => {
+    setLoadedMeta(true);
+    rangeInputRef.current.value = audio.currentTime;
+  };
+
+  const handleOnListen = () => {
+    !mouseDownOnSlider && (rangeInputRef.current.value = audio.currentTime);
+  };
+
+  const handleOnMouseUp = (e) => {
+    setMouseDownOnSlider(false);
+    audio.currentTime = parseInt(e.target.value);
+  };
 
   if (currentSong && !loading) {
     // song data
@@ -172,15 +183,10 @@ export default function PlayingNowBar() {
                 }}
                 src={apiUri + currentSongFile}
                 listenInterval={500}
-                onLoadedMetadata={() => {
-                  setLoadedMeta(true);
-                  rangeInputRef.current.value = audio.currentTime;
-                }}
-                onListen={() => {
-                  rangeInputRef.current.value = audio.currentTime;
-                }}
-                onSeeked={(e) => {
-                  // console.log(e);
+                onLoadedMetadata={handleOnLoadMetadata}
+                onListen={handleOnListen}
+                onSeeked={() => {
+                  // rangeInputRef.current.value = audio.currentTime;
                 }}
                 // quando ha scaricato abbastanza per poter partire
                 onCanPlay={() => {}}
@@ -198,11 +204,13 @@ export default function PlayingNowBar() {
 
               {loadedMeta && (
                 <input
-                  onChange={handleInputRangeChange}
+                  onMouseDown={() => setMouseDownOnSlider(true)}
+                  onMouseUp={handleOnMouseUp}
                   min={0}
                   max={parseInt(audio.duration)}
                   ref={rangeInputRef}
                   type="range"
+                  step="any"
                 />
               )}
             </div>
