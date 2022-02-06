@@ -13,6 +13,8 @@ import { checkIfLoggedIn } from "../utils";
 import { parse } from "cookie";
 
 // TODO:
+// - style playing now bar
+// - refactor global state
 // - finish styling album, artist and render songs;
 // - add to queue button, handle queue in player-bar
 // - find out how to save current state simultaneously across all logged in devices

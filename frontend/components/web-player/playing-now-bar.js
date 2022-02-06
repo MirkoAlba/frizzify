@@ -52,13 +52,6 @@ export default function PlayingNowBar() {
     ? { width: 35, height: 35 }
     : { width: 55, height: 55 };
 
-  // handle playing
-  const [isPlaying, setIsPlaying] = useState(false);
-  const togglePlaying = (audio) => {
-    setIsPlaying(!isPlaying);
-    isPlaying ? audio?.pause() : audio?.play();
-  };
-
   // fetch data
   const [songs, setSongs] = useState();
   const [currentSong, setCurrentSong] = useState();
@@ -72,6 +65,13 @@ export default function PlayingNowBar() {
 
   const [audio, setAudio] = useState(); // audio object
   const [time, setTime] = useState(); // duration, currentDuration, progress
+
+  // handle playing
+  const [isPlaying, setIsPlaying] = useState(false);
+  const togglePlaying = (audio) => {
+    setIsPlaying(!isPlaying);
+    isPlaying ? audio?.pause() : audio?.play();
+  };
 
   const nextSong = (currentSongIndex) => {
     const index =
@@ -185,9 +185,7 @@ export default function PlayingNowBar() {
                 listenInterval={500}
                 onLoadedMetadata={handleOnLoadMetadata}
                 onListen={handleOnListen}
-                onSeeked={() => {
-                  // rangeInputRef.current.value = audio.currentTime;
-                }}
+                onSeeked={() => {}}
                 // quando ha scaricato abbastanza per poter partire
                 onCanPlay={() => {}}
                 // traccia finita
@@ -204,6 +202,7 @@ export default function PlayingNowBar() {
 
               {loadedMeta && (
                 <input
+                  className="form-range"
                   onMouseDown={() => setMouseDownOnSlider(true)}
                   onMouseUp={handleOnMouseUp}
                   min={0}
