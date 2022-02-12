@@ -64,7 +64,7 @@ export default function PlayingNowBar() {
   });
 
   const [audio, setAudio] = useState(); // audio object
-  const [time, setTime] = useState(); // duration, currentDuration, progress
+  const [progress, setProgress] = useState();
 
   // handle playing
   const [isPlaying, setIsPlaying] = useState(false);
@@ -94,12 +94,21 @@ export default function PlayingNowBar() {
 
   // EVENT HANDLERS FUNCTIONS
   const handleOnLoadMetadata = () => {
+    setProgress((audio.currentTime * 100) / audio.duration);
     setLoadedMeta(true);
-    rangeInputRef.current.value = audio.currentTime;
+    rangeInputRef.current && (rangeInputRef.current.value = audio.currentTime);
   };
 
   const handleOnListen = () => {
-    !mouseDownOnSlider && (rangeInputRef.current.value = audio.currentTime);
+    if (!mouseDownOnSlider) {
+      setProgress((audio.currentTime * 100) / audio.duration);
+      rangeInputRef.current &&
+        (rangeInputRef.current.value = audio.currentTime);
+    }
+  };
+
+  const handleOnMouseDown = () => {
+    setMouseDownOnSlider(true);
   };
 
   const handleOnMouseUp = (e) => {
@@ -200,17 +209,28 @@ export default function PlayingNowBar() {
                 }}
               />
 
-              {loadedMeta && (
-                <input
-                  className="form-range"
-                  onMouseDown={() => setMouseDownOnSlider(true)}
-                  onMouseUp={handleOnMouseUp}
-                  min={0}
-                  max={parseInt(audio.duration)}
-                  ref={rangeInputRef}
-                  type="range"
-                  step="any"
-                />
+              {loadedMeta && !isMobile && (
+                <div className="playback-bar">
+                  <input
+                    className="form-range"
+                    onMouseDown={handleOnMouseDown}
+                    onMouseUp={handleOnMouseUp}
+                    onChange={(e) =>
+                      setProgress((e.target.value * 100) / audio.duration)
+                    }
+                    min={0}
+                    max={parseInt(audio.duration)}
+                    ref={rangeInputRef}
+                    type="range"
+                    step="any"
+                  />
+                  <div
+                    style={{
+                      transform: `translateX(calc(-100% + ${progress}%))`,
+                    }}
+                    className="playback-bar__current-time"
+                  ></div>
+                </div>
               )}
             </div>
           </Col>
@@ -225,7 +245,7 @@ export default function PlayingNowBar() {
               <div className="playback-bar--mobile__progress">
                 <div
                   style={{
-                    transform: `translateX(calc(-100% + ${time?.progress}%))`,
+                    transform: `translateX(calc(-100% + ${progress}%))`,
                   }}
                   className="playback-bar--mobile__progress__current-time"
                 ></div>

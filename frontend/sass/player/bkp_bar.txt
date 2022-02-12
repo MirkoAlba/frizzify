@@ -34,47 +34,21 @@
       }
     }
 
-    .playback-bar {
-      position: relative;
-      width: 75%;
-      max-width: 650px;
-      overflow: hidden;
+    .playback-bar--mobile {
+      width: 100%;
+      height: 2px;
 
-      input[type="range"].form-range {
+      &__progress {
+        overflow-x: hidden;
+        width: 100%;
+        height: 100%;
         position: relative;
 
-        &::-webkit-slider-thumb {
-          position: relative;
-          z-index: 2;
-        }
-      }
-
-      &__current-time {
-        position: absolute;
-        top: 42%;
-        left: 0;
-        width: 100%;
-        height: 0.25rem;
-        background-color: $primary;
-        pointer-events: none;
-      }
-
-      &--mobile {
-        width: 100%;
-        height: 2px;
-
-        &__progress {
-          overflow-x: hidden;
+        &__current-time {
           width: 100%;
           height: 100%;
-          position: relative;
-
-          &__current-time {
-            width: 100%;
-            height: 100%;
-            z-index: 2;
-            background-color: $primary;
-          }
+          z-index: 2;
+          background-color: $primary;
         }
       }
     }
@@ -82,6 +56,55 @@
     .wrapper-player {
       width: 100%;
       height: 100%;
+
+      .wrapper-playback-bar {
+        position: relative;
+        opacity: 0.8;
+        width: 100%;
+        min-width: 200px;
+        max-width: 600px;
+        height: 4px;
+
+        &:hover {
+          opacity: 1;
+        }
+
+        .dragger {
+          position: absolute;
+          top: -90%;
+          width: rem(12px);
+          height: rem(12px);
+          border-radius: 50%;
+          background-color: $white;
+          z-index: 2;
+          // left: var(--progress);
+        }
+      }
+
+      .playback-bar {
+        gap: rem(10px);
+        &__time {
+          font-size: rem(12px);
+          opacity: 0.8;
+          color: $white;
+          margin: 0;
+        }
+
+        &__progress {
+          overflow-x: hidden;
+          width: 100%;
+          height: 100%;
+          background-color: rgba($color: $white, $alpha: 0.7);
+
+          &--current-time {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            background-color: $primary;
+          }
+        }
+      }
 
       .btn- {
         &:focus-visible {
