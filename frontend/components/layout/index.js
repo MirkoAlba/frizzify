@@ -12,7 +12,7 @@ export default function Layout(props) {
       <main className="player-main">
         <LeftNav />
         <section className="player-main__content">{props.children}</section>
-        <PlayingNowBar />
+        <PlayingNowBar token={props.token} />
       </main>
     </Fragment>
   ) : (

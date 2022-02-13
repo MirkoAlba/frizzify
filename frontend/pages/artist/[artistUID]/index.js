@@ -17,7 +17,7 @@ import Card from "../../../components/card";
 export default function ArtistPage({ artist }) {
   const artistData = artist[0];
 
-  const { data, loading, error } = useQuery(GET_ARTIST_ALBUMS, {
+  var { data, loading, error } = useQuery(GET_ARTIST_ALBUMS, {
     variables: {
       pagination: { limit: 5 },
       artist: { id: { eq: artistData.id } },

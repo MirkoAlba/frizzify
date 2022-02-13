@@ -1,16 +1,7 @@
 "use strict";
 
-// const _ = require("lodash");
-
-// function checkBadRequest(contextBody) {
-//   if (_.get(contextBody, "statusCode", 200) !== 200) {
-//     const message = _.get(contextBody, "error", "Bad Request");
-//     const exception = new Error(message);
-//     exception.code = _.get(contextBody, "statusCode", 400);
-//     exception.data = contextBody;
-//     throw exception;
-//   }
-// }
+const _ = require("lodash");
+const jwt = require("jsonwebtoken");
 
 module.exports = {
   /**
@@ -56,5 +47,55 @@ module.exports = {
    * This gives you an opportunity to set up your data model,
    * run jobs, or perform some special logic.
    */
-  bootstrap(/*{ strapi }*/) {},
+  async bootstrap({ strapi }) {
+    const { Server } = require("socket.io");
+    const io = new Server(strapi.server.httpServer, {
+      cors: {
+        origin: "http://localhost:3000",
+        methods: ["GET", "POST"],
+        credentials: true,
+      },
+    });
+
+    var registeredUsers = [];
+
+    // prendo tutte le mail degli utenti registrati
+    try {
+      registeredUsers = await strapi
+        .service("plugin::users-permissions.user")
+        .fetchAll();
+    } catch (e) {
+      console.log(e);
+    }
+
+    io.on("connection", function (socket) {
+      // console.log("connesso");
+
+      // dal client che entra nella room mi faccio dare il token e il device da cui ha fatto l'accesso
+      socket.on("join", function ({ token, device }) {
+        // nel token c'è l'id dell'account
+        const userId = jwt.verify(token, process.env.JWT_SECRET).id;
+        // prendo la mail dell'account
+        const userEmail = registeredUsers.filter((u) => {
+          return userId === u.id;
+        })[0].email;
+
+        socket.join(userEmail); // We are using room of socket io
+
+        console.log(
+          `User from account: ${userEmail} joined from device: ${device}`
+        );
+
+        // setInterval(() => {
+        io.to(userEmail).emit("prova", "CIAO BELLO");
+        // }, 3000);
+
+        // count clients in specific room
+        console.log(
+          `room ${userEmail} size: `,
+          io.sockets.adapter.rooms.get(userEmail).size
+        );
+      });
+    });
+  },
 };

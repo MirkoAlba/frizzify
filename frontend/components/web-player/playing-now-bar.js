@@ -11,8 +11,6 @@ import { formatSong, convertDuration, formatSongs } from "../../utils/index";
 
 import { uri as apiUri } from "../../apollo/api";
 
-import axios from "axios";
-
 import Image from "next/image";
 import Link from "next/link";
 
@@ -21,7 +19,6 @@ import { useStoreActions, useStoreState } from "easy-peasy";
 
 // player components
 import ReactAudioPlayer from "react-audio-player";
-import Draggable from "react-draggable";
 
 // svgs
 import Heart from "../../assets/bar/heart.svg";
@@ -29,9 +26,11 @@ import HeartFill from "../../assets/bar/heart-fill.svg";
 import Play from "../../assets/bar/play-button.svg";
 import Pause from "../../assets/bar/pause-button.svg";
 import Rewind from "../../assets/bar/rewind.svg";
-import { set } from "lodash";
 
-export default function PlayingNowBar() {
+import { io } from "socket.io-client";
+import { browserName } from "react-device-detect";
+
+export default function PlayingNowBar({ token }) {
   // TODO: check length of songName and artist and add horizontal scrolling text animation (22 chars max length)
   // const songNameRef = useRef(null);
   // useEffect(() => {
@@ -44,6 +43,18 @@ export default function PlayingNowBar() {
   //     console.log(data.queues.data);
   //   },
   // });
+
+  useEffect(() => {
+    // on mounted create socket connection
+    var socket;
+    if (typeof window !== "undefined") {
+      socket = io(apiUri + "/");
+      // join this user's room
+      socket.emit("join", { token, device: browserName });
+
+      socket.on("prova", (data) => console.log(data));
+    }
+  }, []);
 
   // responsive
   const { width } = useWindowDimensions();
@@ -62,6 +73,14 @@ export default function PlayingNowBar() {
       setCurrentSong(songs[0]);
     },
   });
+
+  // GLOBAL STATE
+  const globalQueueState = useStoreState((state) => state.user.queue);
+  const setCurrentSongInfo = useStoreActions(
+    (actions) => actions.setCurrentSongInfo
+  );
+
+  // AUDIO PLAYER
 
   const [audio, setAudio] = useState(); // audio object
   const [progress, setProgress] = useState();

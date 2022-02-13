@@ -1,0 +1,19 @@
+{
+  "kind": "collectionType",
+  "collectionName": "prove",
+  "info": {
+    "singularName": "prova",
+    "pluralName": "prove",
+    "displayName": "prova",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "currentSongData": {
+      "type": "json"
+    }
+  }
+}

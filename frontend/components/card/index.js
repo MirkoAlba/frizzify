@@ -11,7 +11,7 @@ import dayjs from "dayjs";
 export default function MusicCard({ data }) {
   const formattedDate = dayjs(data.releaseDate).format("YYYY");
 
-  console.log(data);
+  // console.log(data);
 
   return (
     <Fragment>

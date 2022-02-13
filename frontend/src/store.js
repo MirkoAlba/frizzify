@@ -14,20 +14,12 @@ export const store = createStore(
 
         options: {},
 
-        // variabili che servono : currentSongIndex, draggerPosition: {x, y}, time: {currentDuration, currentRawDuration, duration, progress}
         queue: {
-          currentSong: {
-            currentSongIndex: 0,
-            draggerPosition: {
-              x: 0,
-              y: 0,
-            },
-            time: {
-              currentDuration: "0:00",
-              currentRawDuration: 0,
-              duration: "",
-              progress: 0,
-            },
+          currentSongInfo: {
+            progress: null,
+            currentTime: null, // "0:00"
+            duration: null, // "0:00"
+            isPlaying: null,
           },
           songs: [],
         },
@@ -50,9 +42,13 @@ export const store = createStore(
         state.user.queue.songs = payload ? payload : [];
       }),
 
-      // set current the queue object
+      // set current queue object
       setCurrentQueue: action((state, payload) => {
         Object.assign(state.user.queue, payload);
+      }),
+
+      setCurrentSongInfo: action((state, payload) => {
+        Object.assign(state.user.queue.currentSongInfo, payload);
       }),
 
       // save queue in api

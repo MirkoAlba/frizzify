@@ -9,11 +9,10 @@ import { setAccessToken } from "../apollo/access-token";
 
 import { StoreProvider } from "easy-peasy";
 import { store } from "../src/store";
-import { checkIfLoggedIn } from "../utils";
+import { checkIfLoggedIn, validLoginRegister } from "../utils";
 import { parse } from "cookie";
 
 // TODO:
-// - style playing now bar
 // - refactor global state
 // - finish styling album, artist and render songs;
 // - add to queue button, handle queue in player-bar
@@ -25,7 +24,7 @@ function MyApp({ Component, pageProps, token, isLoggedIn }) {
   return (
     <StoreProvider store={store}>
       <ApolloProvider client={client}>
-        <Layout isLoggedIn={isLoggedIn}>
+        <Layout token={token} isLoggedIn={isLoggedIn}>
           <Component isLoggedIn={isLoggedIn} {...pageProps} />
         </Layout>
       </ApolloProvider>
