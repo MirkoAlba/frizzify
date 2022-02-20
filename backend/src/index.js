@@ -68,17 +68,21 @@ module.exports = {
       console.log(e);
     }
 
+    function getUserEmailByToken(token) {
+      // nel token c'è l'id dell'account
+      const userId = jwt.verify(token, process.env.JWT_SECRET).id;
+      // prendo la mail dell'account
+      return registeredUsers.filter((u) => {
+        return userId === u.id;
+      })[0].email;
+    }
+
     io.on("connection", function (socket) {
       // console.log("connesso");
 
       // dal client che entra nella room mi faccio dare il token e il device da cui ha fatto l'accesso
       socket.on("join", function ({ token, device }) {
-        // nel token c'è l'id dell'account
-        const userId = jwt.verify(token, process.env.JWT_SECRET).id;
-        // prendo la mail dell'account
-        const userEmail = registeredUsers.filter((u) => {
-          return userId === u.id;
-        })[0].email;
+        const userEmail = getUserEmailByToken(token);
 
         socket.join(userEmail); // We are using room of socket io
 
@@ -86,15 +90,17 @@ module.exports = {
           `User from account: ${userEmail} joined from device: ${device}`
         );
 
-        // setInterval(() => {
-        io.to(userEmail).emit("prova", "CIAO BELLO");
-        // }, 3000);
-
         // count clients in specific room
         console.log(
           `room ${userEmail} size: `,
           io.sockets.adapter.rooms.get(userEmail).size
         );
+      });
+
+      socket.on("post_song_data", ({ token, songData, device }) => {
+        const userEmail = getUserEmailByToken(token);
+
+        io.to(userEmail).emit("get_song_data", songData);
       });
     });
   },

@@ -30,31 +30,16 @@ import Rewind from "../../assets/bar/rewind.svg";
 import { io } from "socket.io-client";
 import { browserName } from "react-device-detect";
 
+var socket = io(apiUri + "/");
+
 export default function PlayingNowBar({ token }) {
   // TODO: check length of songName and artist and add horizontal scrolling text animation (22 chars max length)
-  // const songNameRef = useRef(null);
-  // useEffect(() => {
-  //   if (songNameRef.current) {
-  //   }
-  // });
 
-  // useQuery(QUEUES, {
-  //   onCompleted: (data) => {
-  //     console.log(data.queues.data);
-  //   },
-  // });
-
-  useEffect(() => {
-    // on mounted create socket connection
-    var socket;
-    if (typeof window !== "undefined") {
-      socket = io(apiUri + "/");
-      // join this user's room
-      socket.emit("join", { token, device: browserName });
-
-      socket.on("prova", (data) => console.log(data));
-    }
-  }, []);
+  // GLOBAL STATE
+  const globalQueueState = useStoreState((state) => state.user.queue);
+  const setCurrentSongInfo = useStoreActions(
+    (actions) => actions.setCurrentSongInfo
+  );
 
   // responsive
   const { width } = useWindowDimensions();
@@ -74,14 +59,7 @@ export default function PlayingNowBar({ token }) {
     },
   });
 
-  // GLOBAL STATE
-  const globalQueueState = useStoreState((state) => state.user.queue);
-  const setCurrentSongInfo = useStoreActions(
-    (actions) => actions.setCurrentSongInfo
-  );
-
   // AUDIO PLAYER
-
   const [audio, setAudio] = useState(); // audio object
   const [progress, setProgress] = useState();
 
@@ -90,6 +68,17 @@ export default function PlayingNowBar({ token }) {
   const togglePlaying = (audio) => {
     setIsPlaying(!isPlaying);
     isPlaying ? audio?.pause() : audio?.play();
+
+    socket.emit("post_song_data", {
+      token,
+      songData: {
+        isPlaying,
+        currentTime: audio.currentTime,
+        duration: audio.duration,
+        progress,
+      },
+      device: browserName,
+    });
   };
 
   const nextSong = (currentSongIndex) => {
@@ -120,10 +109,24 @@ export default function PlayingNowBar({ token }) {
 
   const handleOnListen = () => {
     if (!mouseDownOnSlider) {
+      socket.emit("post_song_data", {
+        token,
+        songData: {
+          isPlaying,
+          currentTime: audio.currentTime,
+          duration: audio.duration,
+          progress,
+        },
+        device: browserName,
+      });
+
       setProgress((audio.currentTime * 100) / audio.duration);
+
       rangeInputRef.current &&
         (rangeInputRef.current.value = audio.currentTime);
     }
+
+    console.log(progress);
   };
 
   const handleOnMouseDown = () => {
@@ -134,6 +137,24 @@ export default function PlayingNowBar({ token }) {
     setMouseDownOnSlider(false);
     audio.currentTime = parseInt(e.target.value);
   };
+
+  useEffect(() => {
+    // join this user's room
+    socket.emit("join", { token, device: browserName });
+
+    socket.on(
+      "get_song_data",
+      ({ isPlaying, currentTime, duration, progress }) => {
+        rangeInputRef.current.value = currentTime;
+        setProgress((currentTime * 100) / duration);
+        console.log(audio);
+      }
+    );
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   if (currentSong && !loading) {
     // song data
