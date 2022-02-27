@@ -145,7 +145,7 @@ export default function PlayingNowBar({ token }) {
     socket.on(
       "get_song_data",
       ({ isPlaying, currentTime, duration, progress }) => {
-        rangeInputRef.current.value = currentTime;
+        rangeInputRef.current?.value = currentTime;
         setProgress((currentTime * 100) / duration);
         console.log(audio);
       }

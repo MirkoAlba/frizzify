@@ -5,6 +5,8 @@ import Layout from "../components/layout/index";
 import { ApolloProvider } from "@apollo/client";
 import { useApollo } from "../apollo/apollo-client";
 
+import useVh from "../hooks/use-vh";
+
 import { setAccessToken } from "../apollo/access-token";
 
 import { StoreProvider } from "easy-peasy";
@@ -20,6 +22,8 @@ import { parse } from "cookie";
 function MyApp({ Component, pageProps, token, isLoggedIn }) {
   const client = useApollo(pageProps);
   setAccessToken(token);
+
+  useVh(); // set correct vh value for main content (mobile bar issue)
 
   return (
     <StoreProvider store={store}>

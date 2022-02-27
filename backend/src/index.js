@@ -51,7 +51,7 @@ module.exports = {
     const { Server } = require("socket.io");
     const io = new Server(strapi.server.httpServer, {
       cors: {
-        origin: "http://localhost:3000",
+        origin: ["http://localhost:3000", "http://192.168.1.102:3000"],
         methods: ["GET", "POST"],
         credentials: true,
       },
