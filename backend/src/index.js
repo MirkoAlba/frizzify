@@ -99,8 +99,13 @@ module.exports = {
 
       socket.on("post_song_data", ({ token, songData, device }) => {
         const userEmail = getUserEmailByToken(token);
-
+        // console.log(songData);
         io.to(userEmail).emit("get_song_data", songData);
+      });
+
+      socket.on("post_is_host", ({ token, isHost, isPlaying }) => {
+        const userEmail = getUserEmailByToken(token);
+        io.to(userEmail).emit("get_is_host", { isHost, isPlaying });
       });
     });
   },

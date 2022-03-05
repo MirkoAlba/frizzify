@@ -63,21 +63,18 @@ export default function PlayingNowBar({ token }) {
   const [audio, setAudio] = useState(); // audio object
   const [progress, setProgress] = useState();
 
+  const [isHost, setIsHost] = useState("");
+
   // handle playing
   const [isPlaying, setIsPlaying] = useState(false);
   const togglePlaying = (audio) => {
     setIsPlaying(!isPlaying);
     isPlaying ? audio?.pause() : audio?.play();
-
-    socket.emit("post_song_data", {
+    setIsHost(browserName);
+    socket.emit("post_is_host", {
       token,
-      songData: {
-        isPlaying,
-        currentTime: audio.currentTime,
-        duration: audio.duration,
-        progress,
-      },
-      device: browserName,
+      isHost: browserName,
+      isPlaying: !isPlaying,
     });
   };
 
@@ -109,6 +106,7 @@ export default function PlayingNowBar({ token }) {
 
   const handleOnListen = () => {
     if (!mouseDownOnSlider) {
+      // if (isHost === browserName) {
       socket.emit("post_song_data", {
         token,
         songData: {
@@ -119,14 +117,13 @@ export default function PlayingNowBar({ token }) {
         },
         device: browserName,
       });
+      // }
 
       setProgress((audio.currentTime * 100) / audio.duration);
 
       rangeInputRef.current &&
         (rangeInputRef.current.value = audio.currentTime);
     }
-
-    console.log(progress);
   };
 
   const handleOnMouseDown = () => {
@@ -145,11 +142,16 @@ export default function PlayingNowBar({ token }) {
     socket.on(
       "get_song_data",
       ({ isPlaying, currentTime, duration, progress }) => {
-        rangeInputRef.current?.value = currentTime;
+        rangeInputRef.current.value = currentTime; // error on mobile
         setProgress((currentTime * 100) / duration);
-        console.log(audio);
+        console.log(audio?.currenTime);
       }
     );
+
+    socket.on("get_is_host", ({ isHost, isPlaying }) => {
+      setIsHost(isHost);
+      setIsPlaying(isPlaying);
+    });
 
     return () => {
       socket.disconnect();
@@ -255,9 +257,9 @@ export default function PlayingNowBar({ token }) {
                     className="form-range"
                     onMouseDown={handleOnMouseDown}
                     onMouseUp={handleOnMouseUp}
-                    onChange={(e) =>
-                      setProgress((e.target.value * 100) / audio.duration)
-                    }
+                    onChange={(e) => {
+                      setProgress((e.target.value * 100) / audio.duration);
+                    }}
                     min={0}
                     max={parseInt(audio.duration)}
                     ref={rangeInputRef}
