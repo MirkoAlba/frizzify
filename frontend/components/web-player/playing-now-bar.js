@@ -65,30 +65,35 @@ export default function PlayingNowBar({ token }) {
 
   const [isHost, setIsHost] = useState("");
 
-  // handle playing
+  // HANDLE PLAYING
   const [isPlaying, setIsPlaying] = useState(false);
   const togglePlaying = (audio) => {
-    setIsPlaying(!isPlaying);
-    isPlaying ? audio?.pause() : audio?.play();
-    setIsHost(browserName);
+    // setIsPlaying(!isPlaying);
+
     socket.emit("post_is_host", {
       token,
       isHost: browserName,
       isPlaying: !isPlaying,
     });
+
+    socket.on("get_is_host", (data) => {
+      setIsHost(data.isHost);
+      setIsPlaying(data.isPlaying);
+    });
   };
 
+  // ---------- HANDLE CURR SONG POSITION ----------
   const nextSong = (currentSongIndex) => {
     const index =
       currentSongIndex + 1 > songs.length - 1 ? 0 : currentSongIndex + 1;
     setCurrentSong(songs[index]);
   };
-
   const prevSong = (currentSongIndex) => {
     const index =
       currentSongIndex - 1 === -1 ? songs.length - 1 : currentSongIndex - 1;
     setCurrentSong(songs[index]);
   };
+  // ---------- HANDLE CURR SONG POSITION ----------
 
   // serve per avere defined audio obejct
   const [loadedMeta, setLoadedMeta] = useState(false);
@@ -106,7 +111,6 @@ export default function PlayingNowBar({ token }) {
 
   const handleOnListen = () => {
     if (!mouseDownOnSlider) {
-      // if (isHost === browserName) {
       socket.emit("post_song_data", {
         token,
         songData: {
@@ -117,7 +121,6 @@ export default function PlayingNowBar({ token }) {
         },
         device: browserName,
       });
-      // }
 
       setProgress((audio.currentTime * 100) / audio.duration);
 
@@ -139,15 +142,6 @@ export default function PlayingNowBar({ token }) {
     // join this user's room
     socket.emit("join", { token, device: browserName });
 
-    socket.on(
-      "get_song_data",
-      ({ isPlaying, currentTime, duration, progress }) => {
-        rangeInputRef.current.value = currentTime; // error on mobile
-        setProgress((currentTime * 100) / duration);
-        console.log(audio?.currenTime);
-      }
-    );
-
     socket.on("get_is_host", ({ isHost, isPlaying }) => {
       setIsHost(isHost);
       setIsPlaying(isPlaying);
@@ -157,6 +151,33 @@ export default function PlayingNowBar({ token }) {
       socket.disconnect();
     };
   }, []);
+
+  useEffect(() => {
+    console.log("h: ", isHost);
+    console.log("b: ", browserName);
+
+    if (isHost === browserName) {
+      isPlaying ? audio?.play() : audio?.pause();
+      console.log("premuto in host");
+    } else {
+      console.log("premuto in other session");
+      !isPlaying && audio?.pause();
+    }
+  }, [isPlaying]);
+
+  if (loadedMeta && isHost) {
+    socket.on(
+      "get_song_data",
+      ({ isPlaying, currentTime, duration, progress }) => {
+        rangeInputRef.current.value = currentTime; // error on mobile
+        setProgress((currentTime * 100) / duration);
+
+        if (browserName !== isHost) {
+          audio.currentTime = currentTime;
+        }
+      }
+    );
+  }
 
   if (currentSong && !loading) {
     // song data
@@ -208,7 +229,9 @@ export default function PlayingNowBar({ token }) {
                 </button>
 
                 <button
-                  onClick={() => togglePlaying(audio)}
+                  onClickCapture={() => {
+                    togglePlaying(audio);
+                  }}
                   className="btn- bg-unset border-0"
                 >
                   {!isPlaying ? (
@@ -236,9 +259,12 @@ export default function PlayingNowBar({ token }) {
                 listenInterval={500}
                 onLoadedMetadata={handleOnLoadMetadata}
                 onListen={handleOnListen}
-                onSeeked={() => {}}
+                // onSeeked={() => {}}
                 // quando ha scaricato abbastanza per poter partire
-                onCanPlay={() => {}}
+                // onCanPlay={() => {
+                //   console.log("can play");
+                // }}
+                // onPlay={() => {}}
                 // traccia finita
                 onEnded={() => nextSong(songIndex)}
                 // unload src file
