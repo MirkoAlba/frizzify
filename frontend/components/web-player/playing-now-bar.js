@@ -29,6 +29,7 @@ import Rewind from "../../assets/bar/rewind.svg";
 
 import { io } from "socket.io-client";
 import { browserName } from "react-device-detect";
+import { FragmentsOnCompositeTypesRule } from "graphql";
 
 var socket = io(apiUri + "/");
 
@@ -36,7 +37,7 @@ export default function PlayingNowBar({ token }) {
   // TODO: check length of songName and artist and add horizontal scrolling text animation (22 chars max length)
 
   // GLOBAL STATE
-  const globalQueueState = useStoreState((state) => state.user.queue);
+  const globalState = useStoreState((state) => state.user);
   const setCurrentSongInfo = useStoreActions(
     (actions) => actions.setCurrentSongInfo
   );
@@ -68,10 +69,8 @@ export default function PlayingNowBar({ token }) {
   // HANDLE PLAYING
   const [isPlaying, setIsPlaying] = useState(false);
   const togglePlaying = (audio) => {
-    // setIsPlaying(!isPlaying);
-
     socket.emit("post_is_host", {
-      token,
+      room: globalState.email,
       isHost: browserName,
       isPlaying: !isPlaying,
     });
@@ -79,6 +78,12 @@ export default function PlayingNowBar({ token }) {
     socket.on("get_is_host", (data) => {
       setIsHost(data.isHost);
       setIsPlaying(data.isPlaying);
+
+      if (data.isHost === browserName) {
+        data.isPlaying ? audio?.play() : audio?.pause();
+      } else {
+        !data.isPlaying && audio?.pause();
+      }
     });
   };
 
@@ -111,16 +116,18 @@ export default function PlayingNowBar({ token }) {
 
   const handleOnListen = () => {
     if (!mouseDownOnSlider) {
-      socket.emit("post_song_data", {
-        token,
-        songData: {
-          isPlaying,
-          currentTime: audio.currentTime,
-          duration: audio.duration,
-          progress,
-        },
-        device: browserName,
-      });
+      if (isHost === browserName) {
+        socket.emit("post_song_data", {
+          room: globalState.email,
+          songData: {
+            isPlaying,
+            currentTime: audio.currentTime,
+            duration: audio.duration,
+            progress,
+          },
+          device: browserName,
+        });
+      }
 
       setProgress((audio.currentTime * 100) / audio.duration);
 
@@ -153,31 +160,24 @@ export default function PlayingNowBar({ token }) {
   }, []);
 
   useEffect(() => {
-    console.log("h: ", isHost);
-    console.log("b: ", browserName);
+    if (loadedMeta && isHost) {
+      console.log(audio?.currentTime);
+      socket.on(
+        "get_song_data",
+        ({ isPlaying, currentTime, duration, progress }) => {
+          rangeInputRef.current.value = currentTime; // error on mobile
+          setProgress((currentTime * 100) / duration);
 
-    if (isHost === browserName) {
-      isPlaying ? audio?.play() : audio?.pause();
-      console.log("premuto in host");
-    } else {
-      console.log("premuto in other session");
-      !isPlaying && audio?.pause();
-    }
-  }, [isPlaying]);
+          // console.log("local audio ct: ", audio.currentTime);
+          // console.log("socket audio ct: ", currentTime);
 
-  if (loadedMeta && isHost) {
-    socket.on(
-      "get_song_data",
-      ({ isPlaying, currentTime, duration, progress }) => {
-        rangeInputRef.current.value = currentTime; // error on mobile
-        setProgress((currentTime * 100) / duration);
-
-        if (browserName !== isHost) {
-          audio.currentTime = currentTime;
+          if (browserName !== isHost) {
+            audio.currentTime = currentTime;
+          }
         }
-      }
-    );
-  }
+      );
+    }
+  });
 
   if (currentSong && !loading) {
     // song data
