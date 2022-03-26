@@ -4,6 +4,7 @@
       "get": {
         "responses": {
           "200": {
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -2714,11 +2715,12 @@
             }
           }
         ],
-        "requestBody": {}
+        "operationId": "get/artists"
       },
       "post": {
         "responses": {
           "200": {
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -5325,6 +5327,7 @@
           "Artist"
         ],
         "parameters": [],
+        "operationId": "post/artists",
         "requestBody": {
           "required": true,
           "content": {
@@ -5418,6 +5421,7 @@
       "get": {
         "responses": {
           "200": {
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -8035,11 +8039,12 @@
             }
           }
         ],
-        "requestBody": {}
+        "operationId": "get/artists/{id}"
       },
       "put": {
         "responses": {
           "200": {
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -10657,6 +10662,7 @@
             }
           }
         ],
+        "operationId": "put/artists/{id}",
         "requestBody": {
           "required": true,
           "content": {
@@ -10748,6 +10754,7 @@
       "delete": {
         "responses": {
           "200": {
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -10918,7 +10925,7 @@
             }
           }
         ],
-        "requestBody": {}
+        "operationId": "delete/artists/{id}"
       }
     }
   }
