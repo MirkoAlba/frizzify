@@ -1,5 +1,6 @@
 module.exports = {
   reactStrictMode: true,
+  // poweredByHeader: false,
   env: {
     FRONTEND_URL_DEVELOPMENT: process.env.FRONTEND_URL_DEVELOPMENT,
     FRONTEND_URL_PRODUCTION: process.env.FRONTEND_URL_PRODUCTION,

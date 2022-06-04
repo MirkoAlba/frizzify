@@ -26,7 +26,7 @@ export default function AlbumHero({ album }) {
     >
       <Ratio aspectRatio="1x1" className="position-relative">
         <Image
-          src={apiUrl + album.coverUrl}
+          src={apiUrl + album?.coverUrl}
           layout="fill"
           objectFit="cover"
           objectPosition="center"
